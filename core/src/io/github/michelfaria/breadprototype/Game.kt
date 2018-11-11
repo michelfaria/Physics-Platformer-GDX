@@ -1,9 +1,11 @@
 package io.github.michelfaria.breadprototype
 
+import box2dLight.PointLight
 import box2dLight.RayHandler
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -13,19 +15,16 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 import io.github.michelfaria.breadprototype.actor.Player
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.strategy.BlockSpawningStrategy
 import io.github.michelfaria.breadprototype.strategy.UnprojectStrategy
-
-import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
-import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 
 class Game : ApplicationAdapter() {
 
@@ -96,7 +95,8 @@ class Game : ApplicationAdapter() {
         rayHandler = RayHandler(world)
         rayHandler.setBlur(true)
         rayHandler.setBlurNum(BLUR_NUM)
-        rayHandler.setAmbientLight(08888f)
+        rayHandler.setAmbientLight(Color(0f, 0f, 0f, 1f))
+        PointLight(rayHandler, RAYS_NUM, Color(1f, 1f, 1f, 1f), 10f, 10f, 10f)
     }
 
     private fun initTiledBox2DIntegration() {
@@ -151,7 +151,9 @@ class Game : ApplicationAdapter() {
         clearScreen()
         renderTiledMap()
         batch.begin()
-        run { drawStage() }
+        run {
+            drawStage()
+        }
         batch.end()
         renderLighting()
         renderDebug()
@@ -164,7 +166,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun clearScreen() {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClearColor(0.258f, 0.541f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
     }
 

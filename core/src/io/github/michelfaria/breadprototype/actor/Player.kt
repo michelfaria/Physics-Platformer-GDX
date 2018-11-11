@@ -82,7 +82,6 @@ class Player(atlas: TextureAtlas, world: World) : Actor() {
         super.act(delta)
         handleInput()
         syncPositions()
-        println("isGrounded = $isGrounded")
     }
 
     private fun handleInput() {
