@@ -48,7 +48,7 @@ public class Player extends Actor {
 
         shape.setAsBox(getWidth() / 2, getHeight() / 2);
         fdef.shape = shape;
-        fdef.friction = 5;
+        fdef.friction = 0;
         fdef.filter.categoryBits = BIT_ENTITY;
         fdef.filter.maskBits = BIT_WORLD;
         body.createFixture(fdef);
@@ -85,7 +85,6 @@ public class Player extends Actor {
         super.act(delta);
         handleInput();
         syncPositions();
-        System.out.println("isGrounded = " + isGrounded);
     }
 
     private void handleInput() {

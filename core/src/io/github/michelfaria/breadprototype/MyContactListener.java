@@ -11,21 +11,21 @@ public class MyContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         final Pair<Fixture> fixtures = getFixturePair(contact);
-        setPlayerGroundedIfContact(fixtures, true);
+        doGroundedCheck(fixtures, true);
     }
 
     @Override
     public void endContact(Contact contact) {
         final Pair<Fixture> fixtures = getFixturePair(contact);
-        setPlayerGroundedIfContact(fixtures, false);
+        doGroundedCheck(fixtures, false);
     }
 
-    private void setPlayerGroundedIfContact(Pair<Fixture> fixtures, boolean grounded) {
+    private void doGroundedCheck(Pair<Fixture> fixtures, boolean b) {
         final Pair<Fixture> match = getFixturePairMatchByClass(fixtures, PlayerFeetFUD.class, WorldSolidFUD.class);
         if (match != null) {
             ((PlayerFeetFUD) FixtureUtil.getFUD(match.a))
                     .getPlayer()
-                    .setGrounded(grounded);
+                    .setGrounded(b);
         }
     }
 

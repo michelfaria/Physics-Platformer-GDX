@@ -22,8 +22,7 @@ import io.github.michelfaria.breadprototype.fud.WorldSolidFUD;
 import static io.github.michelfaria.breadprototype.Bits.BIT_ENTITY;
 import static io.github.michelfaria.breadprototype.Bits.BIT_WORLD;
 
-public class Game extends ApplicationAdapter
-{
+public class Game extends ApplicationAdapter {
     public static final int   VRESX   = 15;
     public static final int   VRESY   = 10;
     public static final float GRAVITY = -9.18f;
@@ -40,8 +39,7 @@ public class Game extends ApplicationAdapter
     private World                      world;
 
     @Override
-    public void create()
-    {
+    public void create() {
         initGraphics();
         initScene2D();
         initTiled();
@@ -50,39 +48,32 @@ public class Game extends ApplicationAdapter
         makePlayer();
     }
 
-    private void initGraphics()
-    {
+    private void initGraphics() {
         batch = new SpriteBatch();
         textureAtlas = new TextureAtlas("default.atlas");
     }
 
-    private void initScene2D()
-    {
+    private void initScene2D() {
         camera = new OrthographicCamera();
         viewport = new FitViewport(VRESX, VRESY, camera);
         stage = new Stage(viewport);
     }
 
-    private void initTiled()
-    {
+    private void initTiled() {
         tmxMapLoader = new TmxMapLoader();
         tiledMap = tmxMapLoader.load("maps/test.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, ptm(1), batch);
     }
 
-    private void initBox2D()
-    {
+    private void initBox2D() {
         box2DDebugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0, GRAVITY), true);
         world.setContactListener(new MyContactListener());
     }
 
-    private void initTiledBox2DIntegration()
-    {
-        for (MapLayer layer : tiledMap.getLayers())
-        {
-            if (!isPhysicsLayer(layer))
-            {
+    private void initTiledBox2DIntegration() {
+        for (MapLayer layer : tiledMap.getLayers()) {
+            if (!isPhysicsLayer(layer)) {
                 continue;
             }
 
@@ -90,8 +81,7 @@ public class Game extends ApplicationAdapter
             final PolygonShape shape = new PolygonShape();
             final FixtureDef   fdef  = new FixtureDef();
 
-            for (RectangleMapObject o : layer.getObjects().getByType(RectangleMapObject.class))
-            {
+            for (RectangleMapObject o : layer.getObjects().getByType(RectangleMapObject.class)) {
                 final Rectangle rectangle = o.getRectangle();
 
                 bdef.type = BodyDef.BodyType.StaticBody;
@@ -110,28 +100,24 @@ public class Game extends ApplicationAdapter
         }
     }
 
-    private boolean isPhysicsLayer(MapLayer layer)
-    {
+    private boolean isPhysicsLayer(MapLayer layer) {
         return layer.getName().contains("[phys]");
     }
 
-    private void makePlayer()
-    {
+    private void makePlayer() {
         final Player player = new Player(textureAtlas, world);
         player.getBody().setTransform(2, 5, 0);
         stage.addActor(player);
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         super.resize(width, height);
         viewport.update(width, height);
     }
 
     @Override
-    public void render()
-    {
+    public void render() {
         update();
         clearScreen();
         renderTiledMap();
@@ -143,39 +129,33 @@ public class Game extends ApplicationAdapter
         renderDebug();
     }
 
-    private void update()
-    {
+    private void update() {
         world.step(1 / 60f, 6, 2);
         stage.act();
         camera.update();
     }
 
-    protected void clearScreen()
-    {
+    protected void clearScreen() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    protected void renderTiledMap()
-    {
+    protected void renderTiledMap() {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
     }
 
-    protected void drawStage()
-    {
+    protected void drawStage() {
         batch.setProjectionMatrix(camera.combined);
         stage.draw();
     }
 
-    protected void renderDebug()
-    {
+    protected void renderDebug() {
         box2DDebugRenderer.render(world, camera.combined);
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         batch.dispose();
         textureAtlas.dispose();
         stage.dispose();
@@ -185,8 +165,7 @@ public class Game extends ApplicationAdapter
         world.dispose();
     }
 
-    public static float ptm(float pixels)
-    {
+    public static float ptm(float pixels) {
         return pixels / 16;
     }
 }
