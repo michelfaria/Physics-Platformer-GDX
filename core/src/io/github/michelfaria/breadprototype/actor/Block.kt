@@ -7,13 +7,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.utils.Disposable
 import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 import io.github.michelfaria.breadprototype.TextureRegionNames
 import io.github.michelfaria.breadprototype.fud.BlockFUD
 import kotlin.experimental.or
 
-class Block(private val world: World, atlas: TextureAtlas, x: Float, y: Float) : PhysicsActor() {
+class Block(world: World, atlas: TextureAtlas, x: Float, y: Float) : PhysicsActor(world) {
 
     private val texture: TextureRegion
 

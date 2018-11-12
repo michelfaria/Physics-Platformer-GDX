@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 import io.github.michelfaria.breadprototype.actor.Player
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
+import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawningStrategy
 import io.github.michelfaria.breadprototype.strategy.UnprojectStrategy
 
@@ -56,6 +57,8 @@ class Game : ApplicationAdapter() {
     private lateinit var inputProcessor: InputProcessor
     private lateinit var blockSpawningStrategy: BlockSpawningStrategy
     private lateinit var unprojectStrategy: UnprojectStrategy
+
+    private var cameraTarget: Positionable? = null
 
     override fun create() {
         initAssets()
@@ -104,8 +107,8 @@ class Game : ApplicationAdapter() {
         rayHandler = RayHandler(world)
         rayHandler.setBlur(true)
         rayHandler.setBlurNum(BLUR_NUM)
-        rayHandler.setAmbientLight(Color(0f, 0f, 0f, 1f))
-        PointLight(rayHandler, RAYS_NUM, Color(1f, 1f, 1f, 1f), 10f, 10f, 10f)
+        rayHandler.setAmbientLight(08888f)
+        PointLight(rayHandler, RAYS_NUM, Color(1f, 1f, 1f, 1f), 20f, 10f, 15f)
     }
 
     private fun initTiledBox2DIntegration() {
@@ -113,23 +116,25 @@ class Game : ApplicationAdapter() {
             if (!isPhysicsLayer(layer)) {
                 continue
             }
-
             val bdef = BodyDef()
             val shape = PolygonShape()
             val fdef = FixtureDef()
-
             for (o in layer.objects.getByType(RectangleMapObject::class.java)) {
                 val rectangle = o.rectangle
-
-                bdef.type = BodyDef.BodyType.StaticBody
-                bdef.position.x = ptm(rectangle.x + rectangle.width / 2)
-                bdef.position.y = ptm(rectangle.y + rectangle.height / 2)
+                bdef.apply {
+                    type = BodyDef.BodyType.StaticBody
+                    position.x = ptm(rectangle.x + rectangle.width / 2)
+                    position.y = ptm(rectangle.y + rectangle.height / 2)
+                }
                 shape.setAsBox(ptm(rectangle.width / 2), ptm(rectangle.height / 2))
-                fdef.shape = shape
-                fdef.filter.categoryBits = BIT_SOLID
-
+                fdef.apply {
+                    this.shape = shape
+                    filter.categoryBits = BIT_SOLID
+                }
                 val body = world.createBody(bdef)
-                body.createFixture(fdef).userData = WorldSolidFUD()
+                body.createFixture(fdef).apply {
+                    userData = WorldSolidFUD()
+                }
             }
             shape.dispose()
         }
@@ -145,9 +150,10 @@ class Game : ApplicationAdapter() {
     }
 
     private fun makePlayer() {
-        val player = Player(textureAtlas, world)
+        val player = Player(world, textureAtlas)
         player.body.setTransform(2f, 5f, 0f)
         stage.addActor(player)
+        cameraTarget = player
     }
 
     override fun resize(width: Int, height: Int) {
@@ -165,12 +171,20 @@ class Game : ApplicationAdapter() {
         }
         batch.end()
         renderLighting()
-        renderDebug()
+        // renderDebug()
     }
 
     private fun update() {
         world.step(1 / 60f, 6, 2)
         stage.act()
+        updateCamera()
+    }
+
+    private fun updateCamera() {
+        if (cameraTarget != null) {
+            camera.position.x = cameraTarget!!.getX()
+            camera.position.y = cameraTarget!!.getY()
+        }
         camera.update()
     }
 

@@ -6,13 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.physics.box2d.*
-import com.badlogic.gdx.scenes.scene2d.Actor
 import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 import io.github.michelfaria.breadprototype.TextureRegionNames
 import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD
 
-class Player(atlas: TextureAtlas, world: World) : PhysicsActor() {
+class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
 
     companion object {
         const val MOVE_VEL_X = 6
