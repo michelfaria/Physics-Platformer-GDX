@@ -1,9 +1,16 @@
 
 default.png
-size: 32,32
+size: 64,32
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+dirt
+  rotate: false
+  xy: 19, 6
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 player-idle
   rotate: false
   xy: 2, 2

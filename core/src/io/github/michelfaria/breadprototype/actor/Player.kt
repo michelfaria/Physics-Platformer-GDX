@@ -9,23 +9,21 @@ import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Actor
 import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
+import io.github.michelfaria.breadprototype.TextureRegionNames
 import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD
-import java.util.*
 
-class Player(atlas: TextureAtlas, world: World) : Actor() {
+class Player(atlas: TextureAtlas, world: World) : PhysicsActor() {
 
     companion object {
         const val MOVE_VEL_X = 6
         const val JUMP_FORCE = 100
     }
 
-    lateinit var body: Body
+    private val idleTexture: TextureRegion
     var isGrounded: Boolean = false
 
-    private val idle: TextureRegion
-
     init {
-        idle = Objects.requireNonNull<TextureAtlas.AtlasRegion>(atlas.findRegion("player-idle"))
+        idleTexture = atlas.findRegion(TextureRegionNames.PLAYER_IDLE)
         width = 1f
         height = 1f
         makePhysicsBody(world)
@@ -75,13 +73,12 @@ class Player(atlas: TextureAtlas, world: World) : Actor() {
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
-        batch!!.draw(idle, x, y, width, height)
+        drawTextureAtBody(batch, idleTexture)
     }
 
     override fun act(delta: Float) {
         super.act(delta)
         handleInput()
-        syncPositions()
     }
 
     private fun handleInput() {
@@ -105,10 +102,5 @@ class Player(atlas: TextureAtlas, world: World) : Actor() {
         if (!movedX) {
             body.setLinearVelocity(0f, vel.y)
         }
-    }
-
-    private fun syncPositions() {
-        x = body.position.x - width / 2
-        y = body.position.y - height / 2
     }
 }

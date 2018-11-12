@@ -5,6 +5,7 @@ import box2dLight.RayHandler
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -40,6 +41,7 @@ class Game : ApplicationAdapter() {
         }
     }
 
+    private lateinit var assetManager: AssetManager
     private lateinit var batch: SpriteBatch
     private lateinit var textureAtlas: TextureAtlas
     private lateinit var camera: OrthographicCamera
@@ -56,21 +58,28 @@ class Game : ApplicationAdapter() {
     private lateinit var unprojectStrategy: UnprojectStrategy
 
     override fun create() {
+        initAssets()
         initGraphics()
         initScene2D()
         unprojectStrategy = UnprojectStrategy(camera)
         initTiled()
         initBox2D()
-        blockSpawningStrategy = BlockSpawningStrategy(world)
+        blockSpawningStrategy = BlockSpawningStrategy(world, textureAtlas, stage)
         initBox2DLights()
         initTiledBox2DIntegration()
         initInputProcessor()
         makePlayer()
     }
 
+    private fun initAssets() {
+        assetManager = AssetManager()
+        assetManager.load(Assets.TEXTURE_ATLAS)
+        assetManager.finishLoading()
+    }
+
     private fun initGraphics() {
         batch = SpriteBatch()
-        textureAtlas = TextureAtlas("default.atlas")
+        textureAtlas = assetManager.get(Assets.TEXTURE_ATLAS)
     }
 
     private fun initScene2D() {
@@ -81,7 +90,7 @@ class Game : ApplicationAdapter() {
 
     private fun initTiled() {
         tmxMapLoader = TmxMapLoader()
-        tiledMap = tmxMapLoader.load("maps/test.tmx")
+        tiledMap = tmxMapLoader.load(Assets.TEST_MAP)
         tiledMapRenderer = OrthogonalTiledMapRenderer(tiledMap, ptm(1f), batch)
     }
 
@@ -190,6 +199,7 @@ class Game : ApplicationAdapter() {
     }
 
     override fun dispose() {
+        assetManager.dispose()
         batch.dispose()
         textureAtlas.dispose()
         stage.dispose()
