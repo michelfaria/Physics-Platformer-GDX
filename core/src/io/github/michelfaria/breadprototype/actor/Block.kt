@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.utils.Disposable
 import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
@@ -24,6 +25,7 @@ class Block(world: World, atlas: TextureAtlas, x: Float, y: Float) : PhysicsActo
         this.y = y
         width = 1f
         height = 1f
+        touchable = Touchable.enabled
         createPhysicsBody()
     }
 
@@ -53,5 +55,11 @@ class Block(world: World, atlas: TextureAtlas, x: Float, y: Float) : PhysicsActo
     override fun draw(batch: Batch?, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
         drawTextureAtBody(batch, texture)
+    }
+
+    class Factory(private val world: World, private val atlas: TextureAtlas) {
+        fun make(x: Float, y: Float): Block {
+            return Block(world, atlas, x, y)
+        }
     }
 }

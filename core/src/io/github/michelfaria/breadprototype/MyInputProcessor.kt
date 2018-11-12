@@ -1,12 +1,13 @@
 package io.github.michelfaria.breadprototype
 
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector3
-import io.github.michelfaria.breadprototype.strategy.BlockSpawningStrategy
-import io.github.michelfaria.breadprototype.strategy.UnprojectStrategy
+import io.github.michelfaria.breadprototype.strategy.BlockSpawner
+import io.github.michelfaria.breadprototype.strategy.Unprojector
 
-class MyInputProcessor(private val blockSpawningStrategy: BlockSpawningStrategy,
-                       private val unprojectStrategy: UnprojectStrategy) : InputProcessor {
+class MyInputProcessor(private val blockSpawner: BlockSpawner,
+                       private val unprojector: Unprojector) : InputProcessor {
 
     override fun keyDown(keycode: Int): Boolean {
         return false
@@ -21,9 +22,18 @@ class MyInputProcessor(private val blockSpawningStrategy: BlockSpawningStrategy,
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val v = unprojectStrategy.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
-        blockSpawningStrategy.spawnBlock(v.x, v.y)
-        return true
+        val v = unprojector.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
+        return when (button) {
+            Input.Buttons.LEFT -> {
+                blockSpawner.spawnBlock(v.x, v.y)
+                true
+            }
+            Input.Buttons.RIGHT -> {
+                blockSpawner.removeBlock(v.x, v.y)
+                true
+            }
+            else -> false
+        }
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {

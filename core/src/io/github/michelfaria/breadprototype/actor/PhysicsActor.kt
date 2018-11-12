@@ -19,13 +19,13 @@ abstract class PhysicsActor(protected val world: World) : Actor(), Positionable,
     }
 
     protected fun drawTextureAtBody(batch: Batch?, texture: TextureRegion) {
-        batch!!.draw(texture, x, y, originX + width / 2, originY + height / 2, width, height, scaleX, scaleY, rotation)
+        batch!!.draw(texture, x, y, originX + width / 2, originY + height / 2, width, height, scaleX, scaleY, rotation * MathUtils.radiansToDegrees)
     }
 
     private fun syncWithBody() {
         x = body.position.x - width / 2
         y = body.position.y - height / 2
-        rotation = body.angle * MathUtils.radiansToDegrees
+        rotation = body.angle
     }
 
     override fun dispose() {

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -22,11 +23,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
+import io.github.michelfaria.breadprototype.actor.Block
 import io.github.michelfaria.breadprototype.actor.Player
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.logic.Positionable
-import io.github.michelfaria.breadprototype.strategy.BlockSpawningStrategy
-import io.github.michelfaria.breadprototype.strategy.UnprojectStrategy
+import io.github.michelfaria.breadprototype.strategy.BlockSpawner
+import io.github.michelfaria.breadprototype.strategy.Unprojector
 
 class Game : ApplicationAdapter() {
 
@@ -45,6 +47,7 @@ class Game : ApplicationAdapter() {
     private lateinit var assetManager: AssetManager
     private lateinit var batch: SpriteBatch
     private lateinit var textureAtlas: TextureAtlas
+    private lateinit var shapeRenderer: ShapeRenderer
     private lateinit var camera: OrthographicCamera
     private lateinit var viewport: Viewport
     private lateinit var stage: Stage
@@ -55,8 +58,10 @@ class Game : ApplicationAdapter() {
     private lateinit var world: World
     private lateinit var rayHandler: RayHandler
     private lateinit var inputProcessor: InputProcessor
-    private lateinit var blockSpawningStrategy: BlockSpawningStrategy
-    private lateinit var unprojectStrategy: UnprojectStrategy
+
+    private lateinit var blockFactory: Block.Factory
+    private lateinit var blockSpawner: BlockSpawner
+    private lateinit var unprojector: Unprojector
 
     private var cameraTarget: Positionable? = null
 
@@ -64,10 +69,11 @@ class Game : ApplicationAdapter() {
         initAssets()
         initGraphics()
         initScene2D()
-        unprojectStrategy = UnprojectStrategy(camera)
+        unprojector = Unprojector(camera)
         initTiled()
         initBox2D()
-        blockSpawningStrategy = BlockSpawningStrategy(world, textureAtlas, stage)
+        blockFactory = Block.Factory(world, textureAtlas)
+        blockSpawner = BlockSpawner(stage, blockFactory)
         initBox2DLights()
         initTiledBox2DIntegration()
         initInputProcessor()
@@ -83,6 +89,7 @@ class Game : ApplicationAdapter() {
     private fun initGraphics() {
         batch = SpriteBatch()
         textureAtlas = assetManager.get(Assets.TEXTURE_ATLAS)
+        shapeRenderer = ShapeRenderer()
     }
 
     private fun initScene2D() {
@@ -141,7 +148,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initInputProcessor() {
-        inputProcessor = MyInputProcessor(blockSpawningStrategy, unprojectStrategy)
+        inputProcessor = MyInputProcessor(blockSpawner, unprojector)
         Gdx.input.inputProcessor = inputProcessor
     }
 
@@ -171,7 +178,8 @@ class Game : ApplicationAdapter() {
         }
         batch.end()
         renderLighting()
-        // renderDebug()
+        renderActorsDotsDebug()
+        // renderBox2dDebug()
     }
 
     private fun update() {
@@ -208,7 +216,23 @@ class Game : ApplicationAdapter() {
         rayHandler.updateAndRender()
     }
 
-    private fun renderDebug() {
+    private fun renderActorsDotsDebug() {
+        shapeRenderer.apply {
+            projectionMatrix = camera.combined
+            setAutoShapeType(true)
+            begin()
+            color = Color.RED
+            stage.actors.forEach {
+                set(ShapeRenderer.ShapeType.Filled)
+                circle(it.x, it.y, 0.05f, 10)
+                set(ShapeRenderer.ShapeType.Line)
+                rect(it.x, it.y, it.width, it.height)
+            }
+            end()
+        }
+    }
+
+    private fun renderBox2dDebug() {
         box2DDebugRenderer.render(world, camera.combined)
     }
 
@@ -216,6 +240,7 @@ class Game : ApplicationAdapter() {
         assetManager.dispose()
         batch.dispose()
         textureAtlas.dispose()
+        shapeRenderer.dispose()
         stage.dispose()
         tiledMapRenderer.dispose()
         tiledMap.dispose()
