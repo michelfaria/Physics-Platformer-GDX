@@ -179,7 +179,7 @@ class Game : ApplicationAdapter() {
         batch.end()
         renderLighting()
         renderActorsDotsDebug()
-        // renderBox2dDebug()
+        renderBox2dDebug()
     }
 
     private fun update() {
@@ -226,7 +226,7 @@ class Game : ApplicationAdapter() {
                 set(ShapeRenderer.ShapeType.Filled)
                 circle(it.x, it.y, 0.05f, 10)
                 set(ShapeRenderer.ShapeType.Line)
-                rect(it.x, it.y, it.width, it.height)
+                rect(it.x, it.y, it.originX, it.originY, it.width, it.height, it.scaleX, it.scaleY, it.rotation)
             }
             end()
         }

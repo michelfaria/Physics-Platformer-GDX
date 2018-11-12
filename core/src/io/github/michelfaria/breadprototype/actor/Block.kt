@@ -57,6 +57,17 @@ class Block(world: World, atlas: TextureAtlas, x: Float, y: Float) : PhysicsActo
         drawTextureAtBody(batch, texture)
     }
 
+    override fun act(delta: Float) {
+        super.act(delta)
+        println(toString())
+    }
+
+    override fun toString(): String {
+        //return "Block(x=$x,y=$y,w=$width,h=$height,rot=$rotation,ox=$originX,oy=$originY,sx=$scaleX,sy=$scaleY)"
+        return "Block(B2DBodyAngle=${body.angle},ActorRotation=$rotation)"
+    }
+
+
     class Factory(private val world: World, private val atlas: TextureAtlas) {
         fun make(x: Float, y: Float): Block {
             return Block(world, atlas, x, y)
