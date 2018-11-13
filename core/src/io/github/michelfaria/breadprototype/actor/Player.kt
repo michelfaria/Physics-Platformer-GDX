@@ -31,48 +31,47 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
     }
 
     private fun initPhysicsBody() {
-        val bdef = BodyDef()
-        bdef.type = BodyDef.BodyType.DynamicBody
-        body = world.createBody(bdef)
+        val bodyDef = BodyDef().apply {
+            type = BodyDef.BodyType.DynamicBody
+        }
+        body = world.createBody(bodyDef)
         body.isFixedRotation = true
     }
 
     private fun initBodyFixture() {
-        val shape = PolygonShape()
-        val fdef = FixtureDef()
-
-        shape.setAsBox(width / 2, height / 2)
-        fdef.apply {
+        val shape = PolygonShape().apply {
+            setAsBox(width / 2, height / 2)
+        }
+        val fixtureDef = FixtureDef().apply {
             this.shape = shape
             friction = 0f
             filter.categoryBits = BIT_ENTITY
         }
-        body.createFixture(fdef)
+        body.createFixture(fixtureDef)
         shape.dispose()
     }
 
     private fun initGroundedSensorBodyFixture() {
-        val shape = EdgeShape()
-        val fdef = FixtureDef()
-
         val left = x - width / 2 + 0.05f
         val bottom = y - height / 2 - 0.05f
         val right = x + width / 2 - 0.05f
 
-        shape.set(left, bottom, right, bottom)
-        fdef.apply {
+        val shape = EdgeShape().apply {
+            set(left, bottom, right, bottom)
+        }
+        val fixtureDef = FixtureDef().apply {
             this.shape = shape
             isSensor = true
             filter.categoryBits = BIT_ENTITY
             filter.maskBits = BIT_SOLID
         }
-        body.createFixture(fdef).userData = PlayerFeetFUD(this)
+        body.createFixture(fixtureDef).userData = PlayerFeetFUD(this)
         shape.dispose()
     }
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
-        drawTextureAtBody(batch, idleTexture)
+        drawTextureAtBody(batch!!, idleTexture)
     }
 
     override fun act(delta: Float) {

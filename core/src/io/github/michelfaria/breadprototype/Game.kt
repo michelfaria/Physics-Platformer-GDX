@@ -116,7 +116,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initBlockManagement() {
-        blockFactory = Block.Factory(world, textureAtlas, assetManager)
+        blockFactory = Block.Factory(world, textureAtlas)
         blockSpawner = BlockSpawner(stage, blockFactory)
     }
 
@@ -135,23 +135,23 @@ class Game : ApplicationAdapter() {
             if (!isPhysicsLayer(layer)) {
                 continue
             }
-            val bdef = BodyDef()
+            val bodyDef = BodyDef()
             val shape = PolygonShape()
-            val fdef = FixtureDef()
+            val fixtureDef = FixtureDef()
             for (o in layer.objects.getByType(RectangleMapObject::class.java)) {
                 val rectangle = o.rectangle
-                bdef.apply {
+                bodyDef.apply {
                     type = BodyDef.BodyType.StaticBody
                     position.x = ptm(rectangle.x + rectangle.width / 2)
                     position.y = ptm(rectangle.y + rectangle.height / 2)
                 }
                 shape.setAsBox(ptm(rectangle.width / 2), ptm(rectangle.height / 2))
-                fdef.apply {
+                fixtureDef.apply {
                     this.shape = shape
                     filter.categoryBits = BIT_SOLID
                 }
-                val body = world.createBody(bdef)
-                body.createFixture(fdef).apply {
+                val body = world.createBody(bodyDef)
+                body.createFixture(fixtureDef).apply {
                     userData = WorldSolidFUD()
                 }
             }
@@ -192,7 +192,7 @@ class Game : ApplicationAdapter() {
         }
         batch.end()
         renderLighting()
-        // renderActorsDotsDebug()
+        renderActorsDotsDebug()
         // renderBox2dDebug()
     }
 

@@ -9,6 +9,7 @@ class Assets {
     companion object {
         val TEXTURE_ATLAS = AssetDescriptor<TextureAtlas>("default.atlas", TextureAtlas::class.java)
         val EFFECT_BLOCK_CREATE = Gdx.files.internal("effects/block-create.p")!!
+        val EFFECT_WAND_PARTICLE = Gdx.files.internal("effects/wand-projectile.p")!!
         const val TEST_MAP = "maps/test.tmx"
     }
 }
