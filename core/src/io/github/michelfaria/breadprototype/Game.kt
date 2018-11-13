@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.FPSLogger
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -17,6 +18,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.badlogic.gdx.math.MathUtils.clamp
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -29,12 +31,14 @@ import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
 import io.github.michelfaria.breadprototype.strategy.Unprojector
+import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelHeight
+import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelWidth
 
 class Game : ApplicationAdapter() {
 
     companion object {
-        const val VRESX = 15
-        const val VRESY = 10
+        const val VRESX = 25
+        const val VRESY = 15
         const val GRAVITY = -9.18f
         const val RAYS_NUM = 1000
         const val BLUR_NUM = 2
@@ -45,6 +49,7 @@ class Game : ApplicationAdapter() {
     }
 
     private lateinit var assetManager: AssetManager
+    private lateinit var fpsLogger: FPSLogger
     private lateinit var batch: SpriteBatch
     private lateinit var textureAtlas: TextureAtlas
     private lateinit var shapeRenderer: ShapeRenderer
@@ -72,8 +77,7 @@ class Game : ApplicationAdapter() {
         unprojector = Unprojector(camera)
         initTiled()
         initBox2D()
-        blockFactory = Block.Factory(world, textureAtlas)
-        blockSpawner = BlockSpawner(stage, blockFactory)
+        initBlockManagement()
         initBox2DLights()
         initTiledBox2DIntegration()
         initInputProcessor()
@@ -87,6 +91,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initGraphics() {
+        fpsLogger = FPSLogger()
         batch = SpriteBatch()
         textureAtlas = assetManager.get(Assets.TEXTURE_ATLAS)
         shapeRenderer = ShapeRenderer()
@@ -110,12 +115,19 @@ class Game : ApplicationAdapter() {
         world.setContactListener(MyContactListener())
     }
 
+    private fun initBlockManagement() {
+        blockFactory = Block.Factory(world, textureAtlas, assetManager)
+        blockSpawner = BlockSpawner(stage, blockFactory)
+    }
+
     private fun initBox2DLights() {
-        rayHandler = RayHandler(world)
-        rayHandler.setBlur(true)
-        rayHandler.setBlurNum(BLUR_NUM)
-        rayHandler.setAmbientLight(08888f)
+        rayHandler = RayHandler(world).apply {
+            setBlur(true)
+            setBlurNum(BLUR_NUM)
+            setAmbientLight(08888f)
+        }
         PointLight(rayHandler, RAYS_NUM, Color(1f, 1f, 1f, 1f), 20f, 10f, 15f)
+        PointLight(rayHandler, RAYS_NUM, Color(1f, 1f, 1f, 1f), 20f, 41f, 24f)
     }
 
     private fun initTiledBox2DIntegration() {
@@ -169,17 +181,19 @@ class Game : ApplicationAdapter() {
     }
 
     override fun render() {
+        fpsLogger.log()
         update()
         clearScreen()
         renderTiledMap()
+        batch.enableBlending()
         batch.begin()
         run {
             drawStage()
         }
         batch.end()
         renderLighting()
-        renderActorsDotsDebug()
-        renderBox2dDebug()
+        // renderActorsDotsDebug()
+        // renderBox2dDebug()
     }
 
     private fun update() {
@@ -189,9 +203,21 @@ class Game : ApplicationAdapter() {
     }
 
     private fun updateCamera() {
-        if (cameraTarget != null) {
-            camera.position.x = cameraTarget!!.getX()
-            camera.position.y = cameraTarget!!.getY()
+        cameraTarget?.let {
+            with(camera) {
+                position.x = it.getX() + it.getWidth() / 2;
+                position.y = it.getY() + it.getHeight() / 2;
+            }
+
+            val mapWidth = mapPixelWidth(tiledMap);
+            val mapHeight = mapPixelHeight(tiledMap);
+            val cameraHalfWidth = camera.viewportWidth / 2;
+            val cameraHalfHeight = camera.viewportHeight / 2;
+
+            with(camera) {
+                position.x = clamp(position.x, cameraHalfWidth, mapWidth - cameraHalfWidth);
+                position.y = clamp(position.y, cameraHalfHeight, mapHeight - cameraHalfHeight);
+            }
         }
         camera.update()
     }

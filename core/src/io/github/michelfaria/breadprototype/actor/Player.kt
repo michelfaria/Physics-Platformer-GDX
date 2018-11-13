@@ -25,19 +25,19 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
         idleTexture = atlas.findRegion(TextureRegionNames.PLAYER_IDLE)
         width = 1f
         height = 1f
-        makePhysicsBody(world)
+        initPhysicsBody()
+        initBodyFixture()
+        initGroundedSensorBodyFixture()
     }
 
-    private fun makePhysicsBody(world: World) {
+    private fun initPhysicsBody() {
         val bdef = BodyDef()
         bdef.type = BodyDef.BodyType.DynamicBody
         body = world.createBody(bdef)
         body.isFixedRotation = true
-        createBodyFixture()
-        createGroundedSensorFixture()
     }
 
-    private fun createBodyFixture() {
+    private fun initBodyFixture() {
         val shape = PolygonShape()
         val fdef = FixtureDef()
 
@@ -51,7 +51,7 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
         shape.dispose()
     }
 
-    private fun createGroundedSensorFixture() {
+    private fun initGroundedSensorBodyFixture() {
         val shape = EdgeShape()
         val fdef = FixtureDef()
 
