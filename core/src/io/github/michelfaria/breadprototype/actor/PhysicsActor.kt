@@ -12,7 +12,7 @@ import io.github.michelfaria.breadprototype.logic.Positionable
 
 abstract class PhysicsActor(protected val world: World) : Actor(), Positionable, Disposable {
 
-    lateinit var body: Body
+    abstract val body: Body
 
     override fun act(delta: Float) {
         super.act(delta)

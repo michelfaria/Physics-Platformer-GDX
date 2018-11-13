@@ -1,10 +1,7 @@
 package io.github.michelfaria.breadprototype.actor
 
 import com.badlogic.gdx.graphics.g2d.*
-import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
-import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import io.github.michelfaria.breadprototype.Assets
 import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
@@ -17,25 +14,32 @@ import kotlin.experimental.or
 
 class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world) {
 
+    override val body: Body
+
     private val texture: TextureRegion
     private val effectDrawer: EffectDrawer = EffectDrawer()
-    private lateinit var creationEffectPool: ParticleEffectPool
+    private val creationEffectPool: ParticleEffectPool = newCreationEffectPool()
 
     init {
         texture = atlas.findRegion(TextureRegionNames.DIRT)
         width = 1f
         height = 1f
         touchable = Touchable.enabled
-        initPhysicsBody()
-        initCreationEffectPool()
+        body = newPhysicsBody()
     }
 
-    private fun initPhysicsBody() {
+    private fun newPhysicsBody(): Body {
         val bodyDef = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
             position.x = x
             position.y = y
         }
+        return world.createBody(bodyDef).apply {
+            newMainFixture(body)
+        }
+    }
+
+    private fun newMainFixture(body: Body) {
         val shape = PolygonShape().apply {
             setAsBox(width / 2, height / 2)
         }
@@ -44,18 +48,17 @@ class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world)
             filter.categoryBits = BIT_SOLID or BIT_ENTITY
             density = 1f
         }
-        this.body = world.createBody(bodyDef)
         body.createFixture(fixtureDef).userData = BlockFUD()
         shape.dispose()
     }
 
-    private fun initCreationEffectPool() {
+    private fun newCreationEffectPool(): ParticleEffectPool {
         val e = ParticleEffect().apply {
             load(Assets.EFFECT_BLOCK_CREATE, atlas)
             scaleEffect(Game.ptm(1f))
             setEmittersCleanUpBlendFunction(false)
         }
-        creationEffectPool = ParticleEffectPool(e, 1, 5)
+        return ParticleEffectPool(e, 1, 5)
     }
 
     fun addNewCreationEffect() {

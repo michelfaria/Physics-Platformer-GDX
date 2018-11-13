@@ -18,6 +18,7 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
         const val JUMP_FORCE = 100
     }
 
+    override val body: Body
     private val idleTexture: TextureRegion
     var isGrounded: Boolean = false
 
@@ -25,20 +26,21 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
         idleTexture = atlas.findRegion(TextureRegionNames.PLAYER_IDLE)
         width = 1f
         height = 1f
-        initPhysicsBody()
-        initBodyFixture()
-        initGroundedSensorBodyFixture()
+        body = newPhysicsBody()
     }
 
-    private fun initPhysicsBody() {
+    private fun newPhysicsBody() : Body {
         val bodyDef = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
         }
-        body = world.createBody(bodyDef)
-        body.isFixedRotation = true
+        return world.createBody(bodyDef).apply {
+            isFixedRotation = true
+            newMainFixture(this)
+            newGroundedSensorFixture(this)
+        }
     }
 
-    private fun initBodyFixture() {
+    private fun newMainFixture(body: Body) {
         val shape = PolygonShape().apply {
             setAsBox(width / 2, height / 2)
         }
@@ -51,11 +53,10 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
         shape.dispose()
     }
 
-    private fun initGroundedSensorBodyFixture() {
+    private fun newGroundedSensorFixture(body: Body) {
         val left = x - width / 2 + 0.05f
         val bottom = y - height / 2 - 0.05f
         val right = x + width / 2 - 0.05f
-
         val shape = EdgeShape().apply {
             set(left, bottom, right, bottom)
         }
