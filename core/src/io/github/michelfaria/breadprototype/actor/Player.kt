@@ -16,7 +16,7 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world), Positiona
 
     companion object {
         const val MOVE_VEL_X = 6
-        const val JUMP_FORCE = 100
+        const val JUMP_FORCE = 140
     }
 
     private val idleTexture: TextureRegion

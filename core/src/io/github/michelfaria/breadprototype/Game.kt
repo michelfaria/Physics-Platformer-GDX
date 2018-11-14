@@ -1,7 +1,6 @@
 package io.github.michelfaria.breadprototype
 
 import box2dLight.PointLight
-
 import box2dLight.RayHandler
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
@@ -19,7 +18,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.MathUtils.clamp
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.MathUtils.*
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -31,19 +31,21 @@ import io.github.michelfaria.breadprototype.actor.Player
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
-import io.github.michelfaria.breadprototype.strategy.Unprojector
 import io.github.michelfaria.breadprototype.strategy.TodoListAppender
+import io.github.michelfaria.breadprototype.strategy.Unprojector
 import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelHeight
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelWidth
+
 class Game : ApplicationAdapter() {
 
     companion object {
         const val VRESX = 25
         const val VRESY = 15
-        const val GRAVITY = -9.18f
+        const val GRAVITY = -9.18f * 2
         const val RAYS_NUM = 1000
         const val BLUR_NUM = 2
+        const val CAMERA_LERP = 0.1f
 
         fun ptm(pixels: Float): Float {
             return pixels / 16
@@ -228,8 +230,8 @@ class Game : ApplicationAdapter() {
     private fun updateCamera() {
         cameraTarget?.let {
             with(camera) {
-                position.x = it.getX() + it.getWidth() / 2;
-                position.y = it.getY() + it.getHeight() / 2;
+                position.x = lerp(position.x, it.getX() + it.getWidth() / 2, CAMERA_LERP)
+                position.y = lerp(position.y, it.getY() + it.getHeight() / 2, CAMERA_LERP)
             }
 
             val mapWidth = mapPixelWidth(tiledMap);
