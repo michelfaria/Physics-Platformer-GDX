@@ -4,6 +4,9 @@ import io.github.michelfaria.breadprototype.actor.WandProjectile
 
 class WandProjectileFUD(private val wandProjectile: WandProjectile) : FUD {
     fun killProjectile() {
-        wandProjectile.remove()
+        with(wandProjectile) {
+            dispose()
+            remove()
+        }
     }
 }

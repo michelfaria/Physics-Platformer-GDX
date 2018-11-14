@@ -18,7 +18,7 @@ class WandProjectile(world: World,
                      var destX: Float, var destY: Float) : PhysicsActor(world) {
 
     companion object {
-        const val SPEED = 5
+        const val SPEED = 15
         private const val LIFESPAN_SECS = 2f
     }
 
@@ -28,12 +28,11 @@ class WandProjectile(world: World,
         width = 0.5f
         height = 0.5f
         initPhysicsBody()
-        initDeathTimer()
     }
 
     private fun initPhysicsBody() {
         val bodyDef = BodyDef().apply {
-            type = BodyDef.BodyType.KinematicBody
+            type = BodyDef.BodyType.DynamicBody
         }
         val shape = CircleShape().apply {
             radius = 0.25f
@@ -47,11 +46,6 @@ class WandProjectile(world: World,
         body.createFixture(fixtureDef).userData = WandProjectileFUD(this)
         shape.dispose()
     }
-
-    private fun initDeathTimer() {
-        addAction(Actions.delay(LIFESPAN_SECS, Actions.removeActor()))
-    }
-
 
     private fun newParticleEffect(): ParticleEffectPool.PooledEffect {
         return wandParticleEffectPool.obtain().also {
@@ -79,8 +73,8 @@ class WandProjectile(world: World,
         effect.setPosition(x + originX, y + originY)
     }
 
-    override fun remove(): Boolean {
+    override fun dispose() {
         effect.dispose()
-        return super.remove()
+        super.dispose()
     }
 }

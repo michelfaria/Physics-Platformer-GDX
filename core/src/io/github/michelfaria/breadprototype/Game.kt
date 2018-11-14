@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.MathUtils.clamp
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
@@ -31,6 +32,7 @@ import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
 import io.github.michelfaria.breadprototype.strategy.Unprojector
+import io.github.michelfaria.breadprototype.strategy.TodoListAppender
 import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelHeight
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelWidth
@@ -68,7 +70,9 @@ class Game : ApplicationAdapter() {
     private lateinit var blockSpawner: BlockSpawner
     private lateinit var wandProjectileSpawner: WandProjectileSpawner
     private lateinit var unprojector: Unprojector
+    private lateinit var todoListAppender: TodoListAppender
 
+    private val todoList = Array<() -> Unit>()
     private var cameraTarget: Positionable? = null
     private var player: Positionable? = null
 
@@ -78,6 +82,7 @@ class Game : ApplicationAdapter() {
         initParticlePools()
         initScene2D()
         unprojector = Unprojector(camera)
+        todoListAppender = TodoListAppender(todoList)
         initTiled()
         initBox2D()
         initSpawners()
@@ -172,7 +177,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initContactListener() {
-        world.setContactListener(MyContactListener(blockSpawner))
+        world.setContactListener(MyContactListener(blockSpawner, todoListAppender))
     }
 
     private fun isPhysicsLayer(layer: MapLayer): Boolean {
@@ -204,14 +209,20 @@ class Game : ApplicationAdapter() {
         }
         batch.end()
         renderLighting()
-        renderActorsDotsDebug()
-        renderBox2dDebug()
+        // renderActorsDotsDebug()
+        // renderBox2dDebug()
     }
 
     private fun update() {
+        runTodos()
         world.step(1 / 60f, 6, 2)
         stage.act()
         updateCamera()
+    }
+
+    private fun runTodos() {
+        todoList.forEach { it() }
+        todoList.clear()
     }
 
     private fun updateCamera() {

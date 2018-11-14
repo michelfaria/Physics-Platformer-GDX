@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.Disposable
 import io.github.michelfaria.breadprototype.logic.Positionable
 
-abstract class PhysicsActor(protected val world: World) : Actor(), Positionable {
+abstract class PhysicsActor(protected val world: World) : Actor(), Positionable, Disposable {
 
     lateinit var body: Body
 
@@ -37,8 +37,7 @@ abstract class PhysicsActor(protected val world: World) : Actor(), Positionable 
         syncWithBody()
     }
 
-    override fun remove(): Boolean {
+    override fun dispose() {
         world.destroyBody(body)
-        return super.remove()
     }
 }

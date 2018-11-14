@@ -5,12 +5,14 @@ import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD
 import io.github.michelfaria.breadprototype.fud.SolidFUD
 import io.github.michelfaria.breadprototype.fud.WandProjectileFUD
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
+import io.github.michelfaria.breadprototype.strategy.TodoListAppender
 import io.github.michelfaria.breadprototype.util.FixtureUtil.getFUD
 import io.github.michelfaria.breadprototype.util.FixtureUtil.getFixturePair
 import io.github.michelfaria.breadprototype.util.FixtureUtil.getFixturePairMatchByClass
 import io.github.michelfaria.breadprototype.util.Pair
 
-class MyContactListener(private val blockSpawner: BlockSpawner) : ContactListener {
+class MyContactListener(private val blockSpawner: BlockSpawner,
+                        private val todoListAppender: TodoListAppender) : ContactListener {
 
     override fun beginContact(contact: Contact) {
         val fixtures = getFixturePair(contact)
@@ -35,8 +37,10 @@ class MyContactListener(private val blockSpawner: BlockSpawner) : ContactListene
         val match = getFixturePairMatchByClass(fixtures, WandProjectileFUD::class.java, SolidFUD::class.java)
         if (match != null) {
             val fud = getFUD(match.a) as WandProjectileFUD
-            fud.killProjectile()
-            blockSpawner.spawnBlock(match.a.body.position.x, match.a.body.position.y)
+            todoListAppender.addUpdate {
+                blockSpawner.spawnBlock(match.a.body.position.x, match.a.body.position.y)
+                fud.killProjectile()
+            }
         }
     }
 
