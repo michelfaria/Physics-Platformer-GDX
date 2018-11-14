@@ -15,11 +15,10 @@ import io.github.michelfaria.breadprototype.fud.BlockFUD
 import io.github.michelfaria.breadprototype.strategy.EffectDrawer
 import kotlin.experimental.or
 
-class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world) {
+class Block(world: World, private val atlas: TextureAtlas, private val blockCreationEffectPool: ParticleEffectPool) : PhysicsActor(world) {
 
     private val texture: TextureRegion
     private val effectDrawer = EffectDrawer()
-    private val creationEffectPool = newCreationEffectPool()
 
     init {
         texture = atlas.findRegion(TextureRegionNames.DIRT)
@@ -48,17 +47,10 @@ class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world)
         shape.dispose()
     }
 
-    private fun newCreationEffectPool(): ParticleEffectPool {
-        val e = ParticleEffect().apply {
-            load(Assets.EFFECT_BLOCK_CREATE, atlas)
-            scaleEffect(Game.ptm(1f))
-            setEmittersCleanUpBlendFunction(false)
-        }
-        return ParticleEffectPool(e, 1, 5)
-    }
+
 
     fun addNewCreationEffect() {
-        creationEffectPool.obtain().apply {
+        blockCreationEffectPool.obtain().apply {
             setPosition(x + width / 2, y + height / 2)
         }.also {
             effectDrawer.add(it)

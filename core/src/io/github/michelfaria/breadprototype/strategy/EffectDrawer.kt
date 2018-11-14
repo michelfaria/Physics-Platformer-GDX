@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.utils.Array;
 
-public class EffectDrawer {
+class EffectDrawer {
     private val pooledEffects = Array<ParticleEffectPool.PooledEffect>(ParticleEffectPool.PooledEffect::class.java)
 
     fun drawEffects(batch: Batch) {

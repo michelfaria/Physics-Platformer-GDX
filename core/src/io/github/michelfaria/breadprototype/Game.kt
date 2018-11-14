@@ -53,6 +53,7 @@ class Game : ApplicationAdapter() {
     private lateinit var batch: SpriteBatch
     private lateinit var textureAtlas: TextureAtlas
     private lateinit var shapeRenderer: ShapeRenderer
+    private lateinit var particlePools: ParticlePools
     private lateinit var camera: OrthographicCamera
     private lateinit var viewport: Viewport
     private lateinit var stage: Stage
@@ -74,6 +75,7 @@ class Game : ApplicationAdapter() {
     override fun create() {
         initAssets()
         initGraphics()
+        initParticlePools()
         initScene2D()
         unprojector = Unprojector(camera)
         initTiled()
@@ -104,6 +106,10 @@ class Game : ApplicationAdapter() {
         stage = Stage(viewport)
     }
 
+    private fun initParticlePools() {
+        particlePools = ParticlePools(textureAtlas)
+    }
+
     private fun initTiled() {
         tmxMapLoader = TmxMapLoader()
         tiledMap = tmxMapLoader.load(Assets.TEST_MAP)
@@ -117,8 +123,8 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initSpawners() {
-        blockSpawner = BlockSpawner(stage, world, textureAtlas)
-        wandProjectileSpawner = WandProjectileSpawner(stage, world, textureAtlas)
+        blockSpawner = BlockSpawner(stage, world, textureAtlas, particlePools.blockCreationEffectPool)
+        wandProjectileSpawner = WandProjectileSpawner(stage, world, particlePools.wandProjectileEffectPool)
     }
 
     private fun initBox2DLights() {

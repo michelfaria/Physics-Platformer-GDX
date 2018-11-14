@@ -3,34 +3,32 @@ package io.github.michelfaria.breadprototype.actor
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.World
-import io.github.michelfaria.breadprototype.Assets
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import io.github.michelfaria.breadprototype.Bits
-import io.github.michelfaria.breadprototype.Game
 import io.github.michelfaria.breadprototype.fud.WandProjectileFUD
 import java.lang.Math.*
 
 class WandProjectile(world: World,
-                     private val atlas: TextureAtlas,
+                     private val wandParticleEffectPool: ParticleEffectPool,
                      var destX: Float, var destY: Float) : PhysicsActor(world) {
 
     companion object {
         const val SPEED = 5
+        private const val LIFESPAN_SECS = 2f
     }
 
-    private val wandParticlePool = newWandParticlePool()
     private val effect = newParticleEffect()
 
     init {
         width = 0.5f
         height = 0.5f
         initPhysicsBody()
+        initDeathTimer()
     }
 
     private fun initPhysicsBody() {
@@ -50,17 +48,13 @@ class WandProjectile(world: World,
         shape.dispose()
     }
 
-    private fun newWandParticlePool(): ParticleEffectPool {
-        val e = ParticleEffect().apply {
-            load(Assets.EFFECT_WAND_PARTICLE, atlas)
-            scaleEffect(Game.ptm(0.25f))
-            setEmittersCleanUpBlendFunction(false)
-        }
-        return ParticleEffectPool(e, 1, 10)
+    private fun initDeathTimer() {
+        addAction(Actions.delay(LIFESPAN_SECS, Actions.removeActor()))
     }
 
+
     private fun newParticleEffect(): ParticleEffectPool.PooledEffect {
-        return wandParticlePool.obtain().also {
+        return wandParticleEffectPool.obtain().also {
             it.start()
         }
     }
