@@ -23,7 +23,7 @@ class BlockSpawner(private val stage: Stage,
     fun removeBlock(x: Float, y: Float) {
         stage.hit(x, y, true)?.apply {
             if (this is Block) {
-                remove()
+                kill()
             }
         }
     }

@@ -3,7 +3,6 @@ package io.github.michelfaria.breadprototype.actor
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -13,6 +12,7 @@ import io.github.michelfaria.breadprototype.logic.Positionable
 abstract class PhysicsActor(protected val world: World) : Actor(), Positionable, Disposable {
 
     lateinit var body: Body
+    private var isDisposed = false
 
     override fun act(delta: Float) {
         super.act(delta)
@@ -38,6 +38,15 @@ abstract class PhysicsActor(protected val world: World) : Actor(), Positionable,
     }
 
     override fun dispose() {
+        if (isDisposed) {
+            throw IllegalStateException("Tried to dispose a ${PhysicsActor::class.java.name} that is already disposed")
+        }
         world.destroyBody(body)
+        isDisposed = true
+    }
+
+    fun kill() {
+        remove()
+        dispose()
     }
 }

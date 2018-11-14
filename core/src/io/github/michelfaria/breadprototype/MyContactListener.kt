@@ -38,8 +38,10 @@ class MyContactListener(private val blockSpawner: BlockSpawner,
         if (match != null) {
             val fud = getFUD(match.a) as WandProjectileFUD
             todoListAppender.addUpdate {
-                blockSpawner.spawnBlock(match.a.body.position.x, match.a.body.position.y)
-                fud.killProjectile()
+                if (!fud.isProjectileDead) {
+                    fud.killProjectile()
+                    blockSpawner.spawnBlock(match.a.body.position.x, match.a.body.position.y)
+                }
             }
         }
     }
