@@ -85,6 +85,7 @@ class Game : ApplicationAdapter() {
         initTiledBox2DIntegration()
         initPlayer()
         initInputProcessor()
+        initContactListener()
     }
 
     private fun initAssets() {
@@ -119,7 +120,6 @@ class Game : ApplicationAdapter() {
     private fun initBox2D() {
         box2DDebugRenderer = Box2DDebugRenderer()
         world = World(Vector2(0f, GRAVITY), true)
-        world.setContactListener(MyContactListener())
     }
 
     private fun initSpawners() {
@@ -169,6 +169,10 @@ class Game : ApplicationAdapter() {
     private fun initInputProcessor() {
         inputProcessor = MyInputProcessor(blockSpawner, wandProjectileSpawner, unprojector, player!!)
         Gdx.input.inputProcessor = inputProcessor
+    }
+
+    private fun initContactListener() {
+        world.setContactListener(MyContactListener(blockSpawner))
     }
 
     private fun isPhysicsLayer(layer: MapLayer): Boolean {

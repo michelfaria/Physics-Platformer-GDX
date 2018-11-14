@@ -47,8 +47,6 @@ class Block(world: World, private val atlas: TextureAtlas, private val blockCrea
         shape.dispose()
     }
 
-
-
     fun addNewCreationEffect() {
         blockCreationEffectPool.obtain().apply {
             setPosition(x + width / 2, y + height / 2)

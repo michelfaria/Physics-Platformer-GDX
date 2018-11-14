@@ -44,7 +44,7 @@ class WandProjectile(world: World,
             filter.maskBits = Bits.BIT_SOLID
         }
         body = world.createBody(bodyDef)
-        body.createFixture(fixtureDef).userData = WandProjectileFUD()
+        body.createFixture(fixtureDef).userData = WandProjectileFUD(this)
         shape.dispose()
     }
 
@@ -77,5 +77,10 @@ class WandProjectile(world: World,
     override fun act(delta: Float) {
         super.act(delta)
         effect.setPosition(x + originX, y + originY)
+    }
+
+    override fun remove(): Boolean {
+        effect.dispose()
+        return super.remove()
     }
 }

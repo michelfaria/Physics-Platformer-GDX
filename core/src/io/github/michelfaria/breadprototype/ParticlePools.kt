@@ -24,6 +24,6 @@ class ParticlePools(private val atlas: TextureAtlas) {
             scaleEffect(Game.ptm(0.25f))
             setEmittersCleanUpBlendFunction(false)
         }
-        return ParticleEffectPool(e, 10, 20)
+        return ParticleEffectPool(e, 30, 50)
     }
 }
