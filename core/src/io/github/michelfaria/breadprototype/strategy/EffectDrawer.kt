@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.utils.Array;
 
 public class EffectDrawer {
-    private val pooledEffects: Array<ParticleEffectPool.PooledEffect> = Array(ParticleEffectPool.PooledEffect::class.java)
+    private val pooledEffects = Array<ParticleEffectPool.PooledEffect>(ParticleEffectPool.PooledEffect::class.java)
 
     fun drawEffects(batch: Batch) {
         pooledEffects.forEachIndexed { i, e ->
@@ -17,7 +17,7 @@ public class EffectDrawer {
                 pooledEffects.removeIndex(i)
             }
         }
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
     }
 
     fun add(effect: ParticleEffectPool.PooledEffect) {

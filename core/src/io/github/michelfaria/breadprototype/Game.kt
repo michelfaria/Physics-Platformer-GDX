@@ -1,6 +1,7 @@
 package io.github.michelfaria.breadprototype
 
 import box2dLight.PointLight
+
 import box2dLight.RayHandler
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
@@ -25,15 +26,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
-import io.github.michelfaria.breadprototype.actor.Block
 import io.github.michelfaria.breadprototype.actor.Player
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD
 import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
 import io.github.michelfaria.breadprototype.strategy.Unprojector
+import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelHeight
 import io.github.michelfaria.breadprototype.util.TiledMapUtil.mapPixelWidth
-
 class Game : ApplicationAdapter() {
 
     companion object {
@@ -64,11 +64,12 @@ class Game : ApplicationAdapter() {
     private lateinit var rayHandler: RayHandler
     private lateinit var inputProcessor: InputProcessor
 
-    private lateinit var blockFactory: Block.Factory
     private lateinit var blockSpawner: BlockSpawner
+    private lateinit var wandProjectileSpawner: WandProjectileSpawner
     private lateinit var unprojector: Unprojector
 
     private var cameraTarget: Positionable? = null
+    private var player: Positionable? = null
 
     override fun create() {
         initAssets()
@@ -77,11 +78,11 @@ class Game : ApplicationAdapter() {
         unprojector = Unprojector(camera)
         initTiled()
         initBox2D()
-        initBlockManagement()
+        initSpawners()
         initBox2DLights()
         initTiledBox2DIntegration()
+        initPlayer()
         initInputProcessor()
-        makePlayer()
     }
 
     private fun initAssets() {
@@ -115,9 +116,9 @@ class Game : ApplicationAdapter() {
         world.setContactListener(MyContactListener())
     }
 
-    private fun initBlockManagement() {
-        blockFactory = Block.Factory(world, textureAtlas)
-        blockSpawner = BlockSpawner(stage, blockFactory)
+    private fun initSpawners() {
+        blockSpawner = BlockSpawner(stage, world, textureAtlas)
+        wandProjectileSpawner = WandProjectileSpawner(stage, world, textureAtlas)
     }
 
     private fun initBox2DLights() {
@@ -160,7 +161,7 @@ class Game : ApplicationAdapter() {
     }
 
     private fun initInputProcessor() {
-        inputProcessor = MyInputProcessor(blockSpawner, unprojector)
+        inputProcessor = MyInputProcessor(blockSpawner, wandProjectileSpawner, unprojector, player!!)
         Gdx.input.inputProcessor = inputProcessor
     }
 
@@ -168,11 +169,12 @@ class Game : ApplicationAdapter() {
         return layer.name.contains("[phys]")
     }
 
-    private fun makePlayer() {
-        val player = Player(world, textureAtlas)
-        player.body.setTransform(2f, 5f, 0f)
-        stage.addActor(player)
-        cameraTarget = player
+    private fun initPlayer() {
+        val p = Player(world, textureAtlas)
+        p.body.setTransform(2f, 5f, 0f)
+        stage.addActor(p)
+        cameraTarget = p
+        player = p
     }
 
     override fun resize(width: Int, height: Int) {
@@ -193,7 +195,7 @@ class Game : ApplicationAdapter() {
         batch.end()
         renderLighting()
         renderActorsDotsDebug()
-        // renderBox2dDebug()
+        renderBox2dDebug()
     }
 
     private fun update() {

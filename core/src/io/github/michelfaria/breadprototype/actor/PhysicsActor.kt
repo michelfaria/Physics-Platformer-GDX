@@ -23,7 +23,7 @@ abstract class PhysicsActor(protected val world: World) : Actor(), Positionable,
         batch.draw(texture, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
     }
 
-    private fun syncWithBody() {
+    open fun syncWithBody() {
         x = body.position.x - width / 2
         y = body.position.y - height / 2
         originX = width / 2
@@ -31,8 +31,9 @@ abstract class PhysicsActor(protected val world: World) : Actor(), Positionable,
         rotation = body.angle * MathUtils.radiansToDegrees
     }
 
-    fun setBodyPosition(v: Vector2, angle: Float = 0f) {
-        body.setTransform(v, angle)
+    override fun setPosition(x: Float, y: Float) {
+        super.setPosition(x, y)
+        body.setTransform(x, y, body.angle)
         syncWithBody()
     }
 

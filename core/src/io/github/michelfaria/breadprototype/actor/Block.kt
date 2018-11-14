@@ -18,8 +18,8 @@ import kotlin.experimental.or
 class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world) {
 
     private val texture: TextureRegion
-    private val effectDrawer: EffectDrawer = EffectDrawer()
-    private lateinit var creationEffectPool: ParticleEffectPool
+    private val effectDrawer = EffectDrawer()
+    private val creationEffectPool = newCreationEffectPool()
 
     init {
         texture = atlas.findRegion(TextureRegionNames.DIRT)
@@ -27,7 +27,6 @@ class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world)
         height = 1f
         touchable = Touchable.enabled
         initPhysicsBody()
-        initCreationEffectPool()
     }
 
     private fun initPhysicsBody() {
@@ -49,13 +48,13 @@ class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world)
         shape.dispose()
     }
 
-    private fun initCreationEffectPool() {
+    private fun newCreationEffectPool(): ParticleEffectPool {
         val e = ParticleEffect().apply {
             load(Assets.EFFECT_BLOCK_CREATE, atlas)
             scaleEffect(Game.ptm(1f))
             setEmittersCleanUpBlendFunction(false)
         }
-        creationEffectPool = ParticleEffectPool(e, 1, 5)
+        return ParticleEffectPool(e, 1, 5)
     }
 
     fun addNewCreationEffect() {
@@ -72,11 +71,5 @@ class Block(world: World, private val atlas: TextureAtlas) : PhysicsActor(world)
         batch!!
         drawTextureAtBody(batch, texture)
         effectDrawer.drawEffects(batch)
-    }
-
-    class Factory(private val world: World, private val atlas: TextureAtlas) {
-        fun make(): Block {
-            return Block(world, atlas)
-        }
     }
 }

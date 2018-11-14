@@ -3,11 +3,15 @@ package io.github.michelfaria.breadprototype
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector3
+import io.github.michelfaria.breadprototype.logic.Positionable
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner
 import io.github.michelfaria.breadprototype.strategy.Unprojector
+import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner
 
 class MyInputProcessor(private val blockSpawner: BlockSpawner,
-                       private val unprojector: Unprojector) : InputProcessor {
+                       private val wandProjectileSpawner: WandProjectileSpawner,
+                       private val unprojector: Unprojector,
+                       private val player: Positionable) : InputProcessor {
 
     override fun keyDown(keycode: Int): Boolean {
         return false
@@ -25,7 +29,9 @@ class MyInputProcessor(private val blockSpawner: BlockSpawner,
         val v = unprojector.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
         return when (button) {
             Input.Buttons.LEFT -> {
-                blockSpawner.spawnBlock(v.x, v.y)
+                // blockSpawner.spawnBlock(v.x, v.y)
+                wandProjectileSpawner.spawn(player.getX() + player.getWidth() / 2,
+                        player.getY() + player.getHeight() / 2, v.x, v.y)
                 true
             }
             Input.Buttons.RIGHT -> {

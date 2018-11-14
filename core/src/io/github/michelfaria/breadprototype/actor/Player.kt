@@ -10,8 +10,9 @@ import io.github.michelfaria.breadprototype.Bits.BIT_ENTITY
 import io.github.michelfaria.breadprototype.Bits.BIT_SOLID
 import io.github.michelfaria.breadprototype.TextureRegionNames
 import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD
+import io.github.michelfaria.breadprototype.logic.Positionable
 
-class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
+class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world), Positionable {
 
     companion object {
         const val MOVE_VEL_X = 6
@@ -19,7 +20,7 @@ class Player(world: World, atlas: TextureAtlas) : PhysicsActor(world) {
     }
 
     private val idleTexture: TextureRegion
-    var isGrounded: Boolean = false
+    var isGrounded = false
 
     init {
         idleTexture = atlas.findRegion(TextureRegionNames.PLAYER_IDLE)

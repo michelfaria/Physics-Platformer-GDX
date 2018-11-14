@@ -1,17 +1,18 @@
 package io.github.michelfaria.breadprototype.strategy
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Stage
 import io.github.michelfaria.breadprototype.actor.Block
 
-class BlockSpawner(private val stage: Stage,
-                   private val blockFactory: Block.Factory) {
+class BlockSpawner(private val stage: Stage, private val world: World, private val atlas: TextureAtlas) {
 
-    fun spawnBlock(x: Float, y: Float) {
-        blockFactory.make().also {
+    fun spawnBlock(x: Float, y: Float): Block {
+        return Block(world, atlas).also {
             stage.addActor(it)
         }.apply {
-            setBodyPosition(Vector2(x, y))
+            setPosition(x, y)
             addNewCreationEffect()
         }
     }
