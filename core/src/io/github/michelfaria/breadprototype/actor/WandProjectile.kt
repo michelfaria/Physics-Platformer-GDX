@@ -50,7 +50,7 @@ class WandProjectile(world: World,
         shape.dispose()
     }
 
-    private fun newWandPargticlePool(): ParticleEffectPool {
+    private fun newWandParticlePool(): ParticleEffectPool {
         val e = ParticleEffect().apply {
             load(Assets.EFFECT_WAND_PARTICLE, atlas)
             scaleEffect(Game.ptm(0.25f))
