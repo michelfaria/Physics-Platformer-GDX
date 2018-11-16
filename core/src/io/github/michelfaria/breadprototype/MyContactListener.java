@@ -40,14 +40,17 @@ public class MyContactListener implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-
     }
 
     private void playerGrounded(Pair<Fixture> fs, boolean grounded) {
         final Pair<Fixture> m = getFixturePairMatchByClass(fs, PlayerFeetFUD.class, SolidFUD.class);
         if (m != null) {
             final PlayerFeetFUD fud = (PlayerFeetFUD) getFUD(m.a);
-            fud.getPlayer().setGrounded(grounded);
+            if (grounded) {
+                fud.getPlayer().incrementGrounded();
+            } else {
+                fud.getPlayer().decrementGrounded();
+            }
         }
     }
 

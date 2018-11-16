@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.michelfaria.breadprototype.actor.Block;
-import io.github.michelfaria.breadprototype.actor.DirtBlock;
+import io.github.michelfaria.breadprototype.actor.TntBlock;
 
 public class BlockSpawner {
 
@@ -23,7 +23,7 @@ public class BlockSpawner {
     }
 
     public Block spawnBlock(float x, float y) {
-        final Block block = new DirtBlock(world, blockCreationEffectPool, atlas);
+        final Block block = new TntBlock(world, blockCreationEffectPool, atlas);
         block.init();
         stage.addActor(block);
         block.setPosition(x, y);
