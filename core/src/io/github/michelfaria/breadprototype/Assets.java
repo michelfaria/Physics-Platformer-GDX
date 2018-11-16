@@ -1,0 +1,22 @@
+package io.github.michelfaria.breadprototype;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import io.github.michelfaria.breadprototype.util.Util;
+
+import static io.github.michelfaria.breadprototype.util.Util._n;
+
+public class Assets {
+
+    public static final AssetDescriptor<TextureAtlas>
+            TEXTURE_ATLAS = new AssetDescriptor<>("default.atlas", TextureAtlas.class);
+
+    public static final FileHandle
+            EFFECT_BLOCK_CREATE = Util._n(Gdx.files.internal("effects/block-create.p")),
+            EFFECT_WAND_PARTICLE = Util._n(Gdx.files.internal("effects/wand-projectile.p"));
+
+    public static final String
+            TEST_MAP = "maps/test.tmx";
+}
