@@ -48,7 +48,7 @@ public abstract class Block extends PhysicsActor {
         final FixtureDef f = new FixtureDef();
         f.shape = s;
         f.filter.categoryBits = (short) (Bits.BIT_SOLID | Bits.BIT_ENTITY);
-        f.density = 1;
+        f.density = 10;
 
         this.body.createFixture(f).setUserData(new BlockFUD());
         s.dispose();

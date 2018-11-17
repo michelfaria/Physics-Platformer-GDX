@@ -11,13 +11,15 @@ import io.github.michelfaria.breadprototype.Bits;
 import io.github.michelfaria.breadprototype.TextureRegionNames;
 import io.github.michelfaria.breadprototype.fud.BlockFUD;
 import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD;
+import io.github.michelfaria.breadprototype.util.Pair;
 
 public class Player extends PhysicsActor {
 
     public static final float
             MOVE_VEL_X = 6f,
             JUMP_FORCE = 140f,
-            KICK_RANGE = 0.5f;
+            KICK_RANGE = 0.5f,
+            KICK_FORCE = 10000f;
 
     private TextureRegion idleTexture;
 
@@ -131,19 +133,23 @@ public class Player extends PhysicsActor {
     }
 
     private void kick() {
-        System.out.println("Player.kick");
+        final Pair<Vector2> kigckArea = getKickArea();
         world.QueryAABB(f -> {
-                    if (f.getUserData() instanceof BlockFUD) {
-                        BlockFUD fud = (BlockFUD) f.getUserData();
-                        System.out.println("fud = " + fud);
-                        return true;
-                    }
-                    return false;
-                },
-                getX() + getWidth() / 2,
-                getY(),
-                getX() + getWidth() / 2 + getWidth(),
-                getY() + getHeight());
+            if (f.getUserData() instanceof BlockFUD) {
+                kick(f);
+            }
+            return true;
+        }, kickArea.a.x, kickArea.a.y, kickArea.b.x, kickArea.b.y);
+    }
+
+    private void kick(Fixture f) {
+        final Body body = f.getBody();
+        body.applyForce(KICK_FORCE * facing, 0, body.getWorldCenter().x, body.getWorldCenter().y, true);
+    }
+
+    public Pair<Vector2> getKickArea() {
+        final float x = getX() + getWidth() / 2 * facing;
+        return new Pair<>(new Vector2(x, getY()), new Vector2(x + getWidth(), getY() + getHeight() / 2));
     }
 
     public void incrementGrounded() {
@@ -159,5 +165,9 @@ public class Player extends PhysicsActor {
 
     public boolean isGrounded() {
         return grounded > 0;
+    }
+
+    public float getFacing() {
+        return facing;
     }
 }

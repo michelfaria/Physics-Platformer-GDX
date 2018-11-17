@@ -28,13 +28,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.michelfaria.breadprototype.actor.Player;
-import io.github.michelfaria.breadprototype.logic.Positionable;
-import io.github.michelfaria.breadprototype.util.TiledMapUtil;
 import io.github.michelfaria.breadprototype.fud.WorldSolidFUD;
+import io.github.michelfaria.breadprototype.logic.Positionable;
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner;
 import io.github.michelfaria.breadprototype.strategy.TodoListAppender;
 import io.github.michelfaria.breadprototype.strategy.Unprojector;
 import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner;
+import io.github.michelfaria.breadprototype.util.Pair;
+import io.github.michelfaria.breadprototype.util.TiledMapUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class Game extends ApplicationAdapter {
@@ -212,8 +213,8 @@ public class Game extends ApplicationAdapter {
         }
         spriteBatch.end();
         renderLighting();
-        // renderActorsDotsDebug();
-        // renderBox2DDebug();
+        renderDebugThings();
+        renderBox2DDebug();
     }
 
     private void update() {
@@ -268,20 +269,32 @@ public class Game extends ApplicationAdapter {
         rayHandler.updateAndRender();
     }
 
-    private void renderActorsDotsDebug() {
+    private void renderDebugThings() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin();
-        shapeRenderer.setColor(Color.RED);
         for (Actor a : stage.getActors()) {
+            shapeRenderer.setColor(Color.RED);
+
+            // Render dot at Actor x,y position
             shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.circle(a.getX(), a.getY(), 0.05f, 10);
+
+            // Render a rectangle around the bounds of the Actor
             shapeRenderer.set(ShapeRenderer.ShapeType.Line);
             shapeRenderer.rect(a.getX(), a.getY(),
                     a.getOriginX(), a.getOriginY(),
                     a.getWidth(), a.getHeight(),
                     a.getScaleX(), a.getScaleY(),
                     a.getRotation());
+
+            if (a instanceof Player) {
+                // Render Player's kick area
+                shapeRenderer.setColor(Color.GREEN);
+                shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+                final Pair<Vector2> kickArea = ((Player) a).getKickArea();
+                shapeRenderer.rect(kickArea.a.x, kickArea.a.y, kickArea.b.x - kickArea.a.x, kickArea.b.y - kickArea.a.y);
+            }
         }
         shapeRenderer.end();
     }
