@@ -213,8 +213,8 @@ public class Game extends ApplicationAdapter {
         }
         spriteBatch.end();
         renderLighting();
-        renderDebugThings();
-        renderBox2DDebug();
+        // renderDebugThings();
+        // renderBox2DDebug();
     }
 
     private void update() {
@@ -233,10 +233,8 @@ public class Game extends ApplicationAdapter {
 
     private void updateCamera() {
         if (cameraTarget != null) {
-            camera.position.x = MathUtils.lerp(camera.position.x,
-                    cameraTarget.getX() + cameraTarget.getWidth() / 2, CAMERA_LERP);
-            camera.position.y = MathUtils.lerp(camera.position.y,
-                    cameraTarget.getY() + cameraTarget.getHeight() / 2, CAMERA_LERP);
+            camera.position.x = MathUtils.lerp(camera.position.x, cameraTarget.getX() + cameraTarget.getWidth() / 2, CAMERA_LERP);
+            camera.position.y = MathUtils.lerp(camera.position.y, cameraTarget.getY() + cameraTarget.getHeight() / 2, CAMERA_LERP);
         }
 
         final int mapWidth = TiledMapUtil.mapPixelWidth(tiledMap);

@@ -18,8 +18,7 @@ public class Player extends PhysicsActor {
     public static final float
             MOVE_VEL_X = 6f,
             JUMP_FORCE = 140f,
-            KICK_RANGE = 0.5f,
-            KICK_FORCE = 10000f;
+            KICK_FORCE = 40_000f;
 
     private TextureRegion idleTexture;
 
@@ -81,6 +80,9 @@ public class Player extends PhysicsActor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+        if (facing > 0 && idleTexture.isFlipX() || facing < 0 && !idleTexture.isFlipX()) {
+            idleTexture.flip(true, false);
+        }
         drawTextureAtBody(batch, idleTexture);
     }
 
@@ -132,6 +134,9 @@ public class Player extends PhysicsActor {
         }
     }
 
+    /**
+     * Query the kick AABB and then kick any blocks in it
+     */
     private void kick() {
         final Pair<Vector2> kickArea = getKickArea();
         world.QueryAABB(f -> {
@@ -142,14 +147,18 @@ public class Player extends PhysicsActor {
         }, kickArea.a.x, kickArea.a.y, kickArea.b.x, kickArea.b.y);
     }
 
+    /**
+     * Kicks the specified fixture
+     */
     private void kick(Fixture f) {
         final Body body = f.getBody();
         body.applyForce(KICK_FORCE * facing, 0, body.getWorldCenter().x, body.getWorldCenter().y, true);
     }
 
     public Pair<Vector2> getKickArea() {
-        final float x = getX() + getWidth() / 2 * facing;
-        return new Pair<>(new Vector2(x, getY()), new Vector2(x + getWidth(), getY() + getHeight() / 2));
+        final float x = getX() + getWidth() / 4 * facing;
+        final float y = getY() + getHeight() / 10;
+        return new Pair<>(new Vector2(x, y), new Vector2(x + getWidth(), y + getHeight() / 2));
     }
 
     public void incrementGrounded() {
