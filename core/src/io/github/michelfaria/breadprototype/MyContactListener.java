@@ -1,9 +1,9 @@
 package io.github.michelfaria.breadprototype;
 
 import com.badlogic.gdx.physics.box2d.*;
-import io.github.michelfaria.breadprototype.fud.WandProjectileFUD;
-import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD;
-import io.github.michelfaria.breadprototype.fud.SolidFUD;
+import io.github.michelfaria.breadprototype.fud.PlayerFeetUD;
+import io.github.michelfaria.breadprototype.fud.SolidUD;
+import io.github.michelfaria.breadprototype.fud.WandProjectileUD;
 import io.github.michelfaria.breadprototype.strategy.BlockSpawner;
 import io.github.michelfaria.breadprototype.strategy.TodoListAppender;
 import io.github.michelfaria.breadprototype.util.Pair;
@@ -43,9 +43,9 @@ public class MyContactListener implements ContactListener {
     }
 
     private void playerGrounded(Pair<Fixture> fs, boolean grounded) {
-        final Pair<Fixture> m = getFixturePairMatchByClass(fs, PlayerFeetFUD.class, SolidFUD.class);
+        final Pair<Fixture> m = getFixturePairMatchByClass(fs, PlayerFeetUD.class, SolidUD.class);
         if (m != null) {
-            final PlayerFeetFUD fud = (PlayerFeetFUD) getFUD(m.a);
+            final PlayerFeetUD fud = (PlayerFeetUD) getFUD(m.a);
             if (grounded) {
                 fud.getPlayer().incrementGrounded();
             } else {
@@ -55,13 +55,12 @@ public class MyContactListener implements ContactListener {
     }
 
     private void wandProjectileCollision(Pair<Fixture> fs) {
-        final Pair<Fixture> m = getFixturePairMatchByClass(fs, WandProjectileFUD.class, SolidFUD.class);
+        final Pair<Fixture> m = getFixturePairMatchByClass(fs, WandProjectileUD.class, Object.class);
         if (m != null) {
-            final WandProjectileFUD fud = (WandProjectileFUD) getFUD(m.a);
+            final WandProjectileUD fud = (WandProjectileUD) getFUD(m.a);
             todoListAppender.addTask(() -> {
-                if (fud.isProjectileAlive()) {
-                    fud.killProjectile();
-                    blockSpawner.spawnBlock(m.a.getBody().getPosition().x, m.a.getBody().getPosition().y);
+                if (!fud.isDisposed()) {
+                    fud.touched(m.b);
                 }
             });
         }

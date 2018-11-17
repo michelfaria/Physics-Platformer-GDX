@@ -1,4 +1,4 @@
 package io.github.michelfaria.breadprototype.fud;
 
-public interface FUD {
+public class PlainBlockUD implements BlockUD {
 }

@@ -9,7 +9,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import io.github.michelfaria.breadprototype.Bits;
-import io.github.michelfaria.breadprototype.fud.BlockFUD;
+import io.github.michelfaria.breadprototype.fud.BlockUD;
+import io.github.michelfaria.breadprototype.fud.PlainBlockUD;
 import io.github.michelfaria.breadprototype.strategy.EffectDrawer;
 
 public abstract class Block extends PhysicsActor {
@@ -48,10 +49,14 @@ public abstract class Block extends PhysicsActor {
         final FixtureDef f = new FixtureDef();
         f.shape = s;
         f.filter.categoryBits = (short) (Bits.BIT_SOLID | Bits.BIT_ENTITY);
-        f.density = 70.225f;
+        f.density = 70;
 
-        this.body.createFixture(f).setUserData(new BlockFUD());
+        this.body.createFixture(f).setUserData(newUserData());
         s.dispose();
+    }
+
+    protected BlockUD newUserData() {
+        return new PlainBlockUD();
     }
 
     public void addNewCreationEffect() {

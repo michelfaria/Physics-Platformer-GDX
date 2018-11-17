@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.michelfaria.breadprototype.actor.Block;
+import io.github.michelfaria.breadprototype.actor.DirtBlock;
 import io.github.michelfaria.breadprototype.actor.TntBlock;
 
 public class BlockSpawner {
@@ -14,16 +15,27 @@ public class BlockSpawner {
     private final World world;
     private final TextureAtlas atlas;
     private final ParticleEffectPool blockCreationEffectPool;
+    private final ExplosionMaker explosionMaker;
 
-    public BlockSpawner(Stage stage, World world, TextureAtlas atlas, ParticleEffectPool blockCreationEffectPool) {
+    //temp
+    public boolean spawnDirt = false;
+
+    public BlockSpawner(Stage stage, World world, TextureAtlas atlas, ParticleEffectPool blockCreationEffectPool,
+                        ExplosionMaker explosionMaker) {
         this.stage = stage;
         this.world = world;
         this.atlas = atlas;
         this.blockCreationEffectPool = blockCreationEffectPool;
+        this.explosionMaker = explosionMaker;
     }
 
     public Block spawnBlock(float x, float y) {
-        final Block block = new TntBlock(world, blockCreationEffectPool, atlas);
+        Block block;
+        if (spawnDirt) {
+            block = new DirtBlock(world, blockCreationEffectPool, atlas);
+        } else {
+            block = new TntBlock(world, blockCreationEffectPool, atlas, explosionMaker);
+        }
         block.init();
         stage.addActor(block);
         block.setPosition(x, y);

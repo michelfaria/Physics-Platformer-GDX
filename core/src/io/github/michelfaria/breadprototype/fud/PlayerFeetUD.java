@@ -1,17 +1,15 @@
 package io.github.michelfaria.breadprototype.fud;
 
 import io.github.michelfaria.breadprototype.actor.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class PlayerFeetFUD implements FUD {
+public class PlayerFeetUD implements PlayerUD {
 
-    private final @NotNull Player player;
+    private final Player player;
 
-    public PlayerFeetFUD(@NotNull Player player) {
+    public PlayerFeetUD(Player player) {
         this.player = player;
     }
 
-    @NotNull
     public Player getPlayer() {
         return player;
     }

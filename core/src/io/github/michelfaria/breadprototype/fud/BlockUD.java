@@ -1,4 +1,4 @@
 package io.github.michelfaria.breadprototype.fud;
 
-public class BlockFUD implements SolidFUD {
+public interface BlockUD extends SolidUD {
 }

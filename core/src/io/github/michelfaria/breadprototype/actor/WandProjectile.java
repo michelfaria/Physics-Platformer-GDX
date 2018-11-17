@@ -4,26 +4,27 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import io.github.michelfaria.breadprototype.Bits;
-import io.github.michelfaria.breadprototype.fud.WandProjectileFUD;
+import io.github.michelfaria.breadprototype.fud.TNTBlockUD;
+import io.github.michelfaria.breadprototype.fud.WandProjectileUD;
+import io.github.michelfaria.breadprototype.strategy.BlockSpawner;
 
 public class WandProjectile extends PhysicsActor {
 
     private static final float SPEED = 15;
     private static final float LIFESPAN_SECS = 2;
 
+    private final BlockSpawner blockSpawner;
     private final ParticleEffectPool wandParticleEffectPool;
     private float destX;
     private float destY;
 
     private final ParticleEffectPool.PooledEffect effect;
 
-    public WandProjectile(World world, ParticleEffectPool wandParticleEffectPool, float destX, float destY) {
+    public WandProjectile(World world, BlockSpawner blockSpawner, ParticleEffectPool wandParticleEffectPool, float destX, float destY) {
         super(world);
+        this.blockSpawner = blockSpawner;
         this.wandParticleEffectPool = wandParticleEffectPool;
         this.destX = destX;
         this.destY = destY;
@@ -51,7 +52,7 @@ public class WandProjectile extends PhysicsActor {
         f.filter.maskBits = Bits.BIT_SOLID;
 
         this.body = world.createBody(b);
-        this.body.createFixture(f).setUserData(new WandProjectileFUD(this));
+        this.body.createFixture(f).setUserData(new WandProjectileUD(this));
         s.dispose();
     }
 
@@ -85,6 +86,15 @@ public class WandProjectile extends PhysicsActor {
     public void act(float delta) {
         super.act(delta);
         effect.setPosition(getX() + getOriginX(), getY() + getOriginY());
+    }
+
+    public void touched(Fixture other) {
+        if (other.getUserData() instanceof TNTBlockUD) {
+            ((TNTBlockUD) other.getUserData()).trigger();
+        } else {
+            blockSpawner.spawnBlock(body.getPosition().x, body.getPosition().y);
+        }
+        dispose();
     }
 
     @Override

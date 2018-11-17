@@ -25,6 +25,13 @@ public class MyInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.O) {
+            blockSpawner.spawnDirt = true;
+            return true;
+        } else if (keycode == Input.Keys.P) {
+            blockSpawner.spawnDirt = false;
+            return true;
+        }
         return false;
     }
 
@@ -43,8 +50,7 @@ public class MyInputProcessor implements InputProcessor {
         final Vector3 v = unprojector.unproject(new Vector3(screenX, screenY, 0));
         switch (button) {
             case Input.Buttons.LEFT:
-                wandProjectileSpawner.spawn(player.getX() + player.getWidth() / 2,
-                        player.getY() + player.getHeight() / 2, v.x, v.y);
+                wandProjectileSpawner.spawn(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, v.x, v.y);
                 break;
             case Input.Buttons.RIGHT:
                 blockSpawner.removeBlock(v.x, v.y);

@@ -2,7 +2,7 @@ package io.github.michelfaria.breadprototype.util;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import io.github.michelfaria.breadprototype.fud.FUD;
+import io.github.michelfaria.breadprototype.fud.UD;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -15,31 +15,31 @@ public class FixtureUtil {
         return new Pair<>(c.getFixtureA(), c.getFixtureB());
     }
 
-    public static @Nullable FUD getFUD(Fixture f) {
+    public static @Nullable UD getFUD(Fixture f) {
         try {
-            return (FUD) f.getUserData();
+            return (UD) f.getUserData();
         } catch (ClassCastException ex) {
             if (f.getUserData() == null) {
                 return null;
             }
-            throw new RuntimeException("Fixture's UserData could not be casted to FUD!", ex);
+            throw new RuntimeException("Fixture's UserData could not be casted to UD!", ex);
         }
     }
 
     /**
-     * @return The FUD for q. May be null if q has no FUD.
-     * @throws RuntimeException If q's UserData cannot be casted to FUD.
+     * @return The UD for q. May be null if q has no UD.
+     * @throws RuntimeException If q's UserData cannot be casted to UD.
      */
-    public static Pair<FUD> getFUDPair(Pair<Fixture> p) {
+    public static Pair<UD> getFUDPair(Pair<Fixture> p) {
         return new Pair<>(Util._n(getFUD(p.a)), Util._n(getFUD(p.b)));
     }
 
     /**
-     * Returns (p.a, p.b) or (p.b, p.a) if the Fixtures' FUD's classes in pair p exclusively are c1 and c2 in any order.
+     * Returns (p.a, p.b) or (p.b, p.a) if the Fixtures' UD's classes in pair p exclusively are c1 and c2 in any order.
      * <p>
      * <p>
-     * Returns (p.a, p.b) if p.a's FUD is c1 and p.b's is c2.
-     * Returns (p.b, p.a) if p.b's FUD is c1 and p.a's is c2.
+     * Returns (p.a, p.b) if p.a's UD is c1 and p.b's is c2.
+     * Returns (p.b, p.a) if p.b's UD is c1 and p.a's is c2.
      * Returns null       otherwise.
      */
     public static <T, R> @Nullable Pair<Fixture> getFixturePairMatchByClass(

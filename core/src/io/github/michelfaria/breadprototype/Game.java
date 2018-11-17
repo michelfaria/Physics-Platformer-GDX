@@ -28,12 +28,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.michelfaria.breadprototype.actor.Player;
-import io.github.michelfaria.breadprototype.fud.WorldSolidFUD;
+import io.github.michelfaria.breadprototype.fud.WorldSolidUD;
 import io.github.michelfaria.breadprototype.logic.Positionable;
-import io.github.michelfaria.breadprototype.strategy.BlockSpawner;
-import io.github.michelfaria.breadprototype.strategy.TodoListAppender;
-import io.github.michelfaria.breadprototype.strategy.Unprojector;
-import io.github.michelfaria.breadprototype.strategy.WandProjectileSpawner;
+import io.github.michelfaria.breadprototype.strategy.*;
 import io.github.michelfaria.breadprototype.util.Pair;
 import io.github.michelfaria.breadprototype.util.TiledMapUtil;
 import org.jetbrains.annotations.Nullable;
@@ -74,6 +71,7 @@ public class Game extends ApplicationAdapter {
     private WandProjectileSpawner wandProjectileSpawner;
     private Unprojector unprojector;
     private TodoListAppender todoListAppender;
+    private ExplosionMaker explosionMaker;
 
     private Array<Runnable> todoList = new Array<>(Runnable.class);
     private @Nullable Positionable cameraTarget = null;
@@ -90,6 +88,7 @@ public class Game extends ApplicationAdapter {
         todoListAppender = new TodoListAppender(todoList);
         initTiled();
         initBox2D();
+        explosionMaker = new ExplosionMaker();
         initSpawners();
         initBox2DLights();
         initTiledBox2DIntegration();
@@ -133,8 +132,8 @@ public class Game extends ApplicationAdapter {
     }
 
     private void initSpawners() {
-        blockSpawner = new BlockSpawner(stage, world, textureAtlas, particlePools.blockCreationEffectPool);
-        wandProjectileSpawner = new WandProjectileSpawner(stage, world, particlePools.wandProjectileEffectPool);
+        blockSpawner = new BlockSpawner(stage, world, textureAtlas, particlePools.blockCreationEffectPool, explosionMaker);
+        wandProjectileSpawner = new WandProjectileSpawner(stage, world, blockSpawner , particlePools.wandProjectileEffectPool);
     }
 
     private void initBox2DLights() {
@@ -143,7 +142,7 @@ public class Game extends ApplicationAdapter {
         rayHandler.setBlurNum(BLUR_NUM);
         rayHandler.setAmbientLight(08888f);
         new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 10, 15);
-        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 41, 24);
+        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1,  1), 20, 41, 24);
     }
 
     private void initTiledBox2DIntegration() {
@@ -165,7 +164,7 @@ public class Game extends ApplicationAdapter {
                 f.shape = s;
                 f.filter.categoryBits = Bits.BIT_SOLID;
                 final Body body = world.createBody(b);
-                body.createFixture(f).setUserData(new WorldSolidFUD());
+                body.createFixture(f).setUserData(new WorldSolidUD());
             }
             s.dispose();
         }

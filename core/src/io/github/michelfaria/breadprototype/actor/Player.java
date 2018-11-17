@@ -9,15 +9,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import io.github.michelfaria.breadprototype.Bits;
 import io.github.michelfaria.breadprototype.TextureRegionNames;
-import io.github.michelfaria.breadprototype.fud.BlockFUD;
-import io.github.michelfaria.breadprototype.fud.PlayerFeetFUD;
+import io.github.michelfaria.breadprototype.fud.BlockUD;
+import io.github.michelfaria.breadprototype.fud.PlayerFeetUD;
+import io.github.michelfaria.breadprototype.fud.PlayerBodyUD;
 import io.github.michelfaria.breadprototype.util.Pair;
 
 public class Player extends PhysicsActor {
 
     public static final float
             MOVE_VEL_X = 6f,
-            JUMP_FORCE = 140f,
+            JUMP_FORCE = 980,
             KICK_FORCE = 40_000f;
 
     private TextureRegion idleTexture;
@@ -54,8 +55,9 @@ public class Player extends PhysicsActor {
         final FixtureDef f = new FixtureDef();
         f.shape = s;
         f.friction = 0;
+        f.density = 7;
         f.filter.categoryBits = Bits.BIT_ENTITY;
-        this.body.createFixture(f);
+        this.body.createFixture(f).setUserData(new PlayerBodyUD());
         s.dispose();
     }
 
@@ -73,7 +75,7 @@ public class Player extends PhysicsActor {
         f.filter.categoryBits = Bits.BIT_ENTITY;
         f.filter.maskBits = Bits.BIT_SOLID;
 
-        this.body.createFixture(f).setUserData(new PlayerFeetFUD(this));
+        this.body.createFixture(f).setUserData(new PlayerFeetUD(this));
         s.dispose();
     }
 
@@ -140,7 +142,7 @@ public class Player extends PhysicsActor {
     private void kick() {
         final Pair<Vector2> kickArea = getKickArea();
         world.QueryAABB(f -> {
-            if (f.getUserData() instanceof BlockFUD) {
+            if (f.getUserData() instanceof BlockUD) {
                 kick(f);
             }
             return true;
