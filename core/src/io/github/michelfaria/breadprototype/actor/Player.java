@@ -133,7 +133,7 @@ public class Player extends PhysicsActor {
     }
 
     private void kick() {
-        final Pair<Vector2> kigckArea = getKickArea();
+        final Pair<Vector2> kickArea = getKickArea();
         world.QueryAABB(f -> {
             if (f.getUserData() instanceof BlockFUD) {
                 kick(f);
