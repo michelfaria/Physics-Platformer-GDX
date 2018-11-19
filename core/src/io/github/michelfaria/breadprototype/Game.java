@@ -147,6 +147,14 @@ public class Game extends ApplicationAdapter {
         // Input
         inputProcessor = new MyInputProcessor(blockSpawner, wandProjectileSpawner, unprojector, player);
         Gdx.input.setInputProcessor(inputProcessor);
+
+        // Make moving platform
+        final MovingPlatform m = new MovingPlatform(world);
+        stage.addActor(m);
+        m.init();
+        m.setTransform(23, 6, 0);
+        m.destinations.add(new Vector2(m.getX() + 10, m.getY()));
+        m.destinations.add(new Vector2(m.getX(), m.getY()));
     }
 
     private void initTiledBox2DIntegration() {
@@ -198,8 +206,8 @@ public class Game extends ApplicationAdapter {
         }
         spriteBatch.end();
         renderLighting();
-        // renderDebugThings();
-        // renderBox2DDebug();
+        renderDebugThings();
+        renderBox2DDebug();
     }
 
     private void update() {

@@ -10,14 +10,15 @@ import com.badlogic.gdx.physics.box2d.*;
 import io.github.michelfaria.breadprototype.Bits;
 import io.github.michelfaria.breadprototype.TextureRegionNames;
 import io.github.michelfaria.breadprototype.fud.BlockUD;
-import io.github.michelfaria.breadprototype.fud.PlayerFeetUD;
 import io.github.michelfaria.breadprototype.fud.PlayerBodyUD;
+import io.github.michelfaria.breadprototype.fud.PlayerFeetUD;
 import io.github.michelfaria.breadprototype.util.Pair;
 
 public class Player extends PhysicsActor {
 
     public static final float
-            MOVE_VEL_X = 6f,
+            MOVE_FORCE_X = 200,
+            SPEED_LIMIT_X = 5f,
             JUMP_FORCE = 980,
             KICK_FORCE = 40_000f;
 
@@ -54,7 +55,7 @@ public class Player extends PhysicsActor {
         s.setAsBox(getWidth() / 2, getHeight() / 2);
         final FixtureDef f = new FixtureDef();
         f.shape = s;
-        f.friction = 0;
+        f.friction = 0.9f;
         f.density = 7;
         f.filter.categoryBits = Bits.BIT_ENTITY;
         this.body.createFixture(f).setUserData(new PlayerBodyUD());
@@ -93,6 +94,7 @@ public class Player extends PhysicsActor {
         super.act(delta);
         assert facing != 0;
         handleInput();
+        System.out.println("isGrounded() = " + isGrounded());
     }
 
     private void handleInput() {
@@ -102,26 +104,23 @@ public class Player extends PhysicsActor {
     }
 
     private void handleInputMovement() {
-        final Vector2 vel = body.getLinearVelocity();
-        boolean movedX = false;
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            body.setLinearVelocity(MOVE_VEL_X, vel.y);
-            movedX = true;
+            if (body.getLinearVelocity().x < SPEED_LIMIT_X) {
+                body.applyForceToCenter(MOVE_FORCE_X, 0, true);
+            }
             facing = 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            body.setLinearVelocity(-MOVE_VEL_X, vel.y);
-            movedX = true;
+            if (body.getLinearVelocity().x > -SPEED_LIMIT_X) {
+                body.applyForceToCenter(-MOVE_FORCE_X, 0, true);
+            }
             facing = -1;
-        }
-        if (!movedX) {
-            body.setLinearVelocity(0, vel.y);
         }
     }
 
     private void handleInputJump() {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && isGrounded()) {
-            body.applyForce(0, JUMP_FORCE, body.getWorldCenter().x, body.getWorldCenter().y, true);
+            body.applyForceToCenter(0, JUMP_FORCE, true);
         }
     }
 

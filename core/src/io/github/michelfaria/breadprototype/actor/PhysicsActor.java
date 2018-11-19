@@ -65,13 +65,17 @@ public class PhysicsActor extends Actor implements Positionable, Disposable {
 
     public void setTransform(Vector2 position, float angle) {
         body.setTransform(position, angle);
+        syncWithBody();
     }
 
     public void setTransform(float x, float y, float angle) {
         body.setTransform(x, y, angle);
+        syncWithBody();
     }
 
     public boolean isDisposed() {
         return isDisposed;
     }
+
+
 }
