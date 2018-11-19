@@ -12,4 +12,20 @@ public class DirtBlock extends Block {
     public DirtBlock(World world, ParticleEffectPool blockCreationEffectPool, TextureAtlas atlas) {
         super(world, blockCreationEffectPool, _n(atlas.findRegion(TextureRegionNames.DIRT)));
     }
+
+    public static class DirtBlockFactory implements BlockFactory<DirtBlock> {
+        private final World world;
+        private final ParticleEffectPool blockCreationEffectPool;
+        private final TextureAtlas textureAtlas;
+
+        public DirtBlockFactory(World world, ParticleEffectPool blockCreationEffectPool, TextureAtlas textureAtlas) {
+            this.world = world;
+            this.blockCreationEffectPool = blockCreationEffectPool;
+            this.textureAtlas = textureAtlas;
+        }
+
+        public DirtBlock make() {
+            return new DirtBlock(world, blockCreationEffectPool, textureAtlas);
+        }
+    }
 }

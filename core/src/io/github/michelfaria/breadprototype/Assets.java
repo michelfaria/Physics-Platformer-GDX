@@ -14,8 +14,9 @@ public class Assets {
             TEXTURE_ATLAS = new AssetDescriptor<>("default.atlas", TextureAtlas.class);
 
     public static final FileHandle
-            EFFECT_BLOCK_CREATE = Util._n(Gdx.files.internal("effects/block-create.p")),
-            EFFECT_WAND_PARTICLE = Util._n(Gdx.files.internal("effects/wand-projectile.p"));
+            EFFECT_BLOCK_CREATE = _n(Gdx.files.internal("effects/block-create.p")),
+            EFFECT_WAND_PARTICLE = _n(Gdx.files.internal("effects/wand-projectile.p")),
+            EFFECT_EXPLOSION_SMOKE_EFFECT = _n(Gdx.files.internal("effects/explosion-smoke.p"));
 
     public static final String
             TEST_MAP = "maps/test.tmx";

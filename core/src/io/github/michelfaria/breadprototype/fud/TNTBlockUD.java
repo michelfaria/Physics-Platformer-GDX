@@ -13,8 +13,4 @@ public class TNTBlockUD implements BlockUD {
     public void trigger() {
         tntBlock.trigger();
     }
-
-    public boolean isTriggered() {
-        return tntBlock.isTriggered();
-    }
 }

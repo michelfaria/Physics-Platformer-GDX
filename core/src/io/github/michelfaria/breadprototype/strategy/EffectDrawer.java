@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
-public class EffectDrawer {
+public class EffectDrawer implements Disposable {
 
     private Array<PooledEffect> pooledEffects = new Array<>(PooledEffect.class);
 
@@ -24,5 +25,18 @@ public class EffectDrawer {
 
     public void add(PooledEffect e) {
         pooledEffects.add(e);
+    }
+
+    public boolean isEmpty() {
+        assert pooledEffects.size >= 0;
+        return pooledEffects.size == 0;
+    }
+
+    @Override
+    public void dispose() {
+        for (PooledEffect e : pooledEffects) {
+            e.free();
+            e.dispose();
+        }
     }
 }

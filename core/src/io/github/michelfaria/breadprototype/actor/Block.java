@@ -75,4 +75,10 @@ public abstract class Block extends PhysicsActor {
         drawTextureAtBody(batch, textureRegion);
         effectDrawer.drawEffects(batch);
     }
+
+    @Override
+    public void dispose() {
+        effectDrawer.dispose();
+        super.dispose();
+    }
 }

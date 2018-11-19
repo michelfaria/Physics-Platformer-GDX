@@ -54,8 +54,8 @@ public class PhysicsActor extends Actor implements Positionable, Disposable {
     @Override
     public void dispose() {
         if (isDisposed) {
-            throw new IllegalStateException("Tried to dispose a "
-                    + PhysicsActor.class.getName() + " but it was already disposed.");
+            throw new IllegalStateException("Tried to dispose a " + PhysicsActor.class.getName()
+                    + " but it was already disposed.");
         }
         remove();
         world.destroyBody(body);

@@ -15,32 +15,59 @@ public class TntBlock extends Block {
     private static final float BLAST_RADIUS = 10;
     private static final float BLAST_POWER = 100_000;
 
-    private ExplosionMaker explosionMaker;
+    private final ExplosionMaker explosionMaker;
+    private final ExplosionEmitter.ExplosionEmitterFactory explosionEmitterFactory;
 
     private boolean isTriggered;
 
-    public TntBlock(World world, ParticleEffectPool blockCreationEffectPool, TextureAtlas atlas, ExplosionMaker explosionMaker) {
-        super(world, blockCreationEffectPool, _n(atlas.findRegion(TextureRegionNames.TNT)));
+    public TntBlock(World world, ParticleEffectPool blockCreationPEP, TextureAtlas atlas, ExplosionMaker explosionMaker,
+                    ExplosionEmitter.ExplosionEmitterFactory explosionEmitterFactory) {
+        super(world, blockCreationPEP, _n(atlas.findRegion(TextureRegionNames.TNT)));
         this.explosionMaker = explosionMaker;
+        this.explosionEmitterFactory = explosionEmitterFactory;
     }
 
     public void trigger() {
-        isTriggered = true;
-        explode();
+        if (!isTriggered) {
+            isTriggered = true;
+            explode();
+        }
     }
 
     private void explode() {
         explosionMaker.makeExplosion(world, body.getWorldCenter(), BLAST_RADIUS, BLAST_POWER);
+        final ExplosionEmitter e = explosionEmitterFactory.make();
+        e.setX(getX() + getWidth() / 2);
+        e.setY(getY() + getHeight() / 2);
+        e.init();
+        getStage().addActor(e);
         dispose();
-    }
-
-
-    public boolean isTriggered() {
-        return isTriggered;
     }
 
     @Override
     protected BlockUD newUserData() {
         return new TNTBlockUD(this);
+    }
+
+    public static class TntBlockFactory implements BlockFactory<TntBlock> {
+        private final World world;
+        private final ParticleEffectPool blockCreationPEP;
+        private final TextureAtlas atlas;
+        private final ExplosionMaker explosionMaker;
+        private final ExplosionEmitter.ExplosionEmitterFactory explosionEmitterFactory;
+
+        public TntBlockFactory(World world, ParticleEffectPool blockCreationPEP, TextureAtlas atlas,
+                               ExplosionMaker explosionMaker,
+                               ExplosionEmitter.ExplosionEmitterFactory explosionEmitterFactory) {
+            this.world = world;
+            this.blockCreationPEP = blockCreationPEP;
+            this.atlas = atlas;
+            this.explosionMaker = explosionMaker;
+            this.explosionEmitterFactory = explosionEmitterFactory;
+        }
+
+        public TntBlock make() {
+            return new TntBlock(world, blockCreationPEP, atlas, explosionMaker, explosionEmitterFactory);
+        }
     }
 }

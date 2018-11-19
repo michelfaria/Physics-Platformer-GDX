@@ -1,26 +1,103 @@
 
 default.png
-size: 512,256
+size: 2048,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 dirt
   rotate: false
-  xy: 262, 136
+  xy: 1692, 136
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-effect-light
+effect-flame-1
+  rotate: false
+  xy: 262, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-flame-2
+  rotate: false
+  xy: 2, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-flame-3
   rotate: false
   xy: 132, 24
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+effect-flame-4
+  rotate: false
+  xy: 1562, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-light
+  rotate: false
+  xy: 912, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-1
+  rotate: false
+  xy: 652, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-2
+  rotate: false
+  xy: 782, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-4
+  rotate: false
+  xy: 522, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-5
+  rotate: false
+  xy: 1042, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-6
+  rotate: false
+  xy: 1172, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-7
+  rotate: false
+  xy: 1302, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effect-smoke-8
+  rotate: false
+  xy: 1432, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 effect-star
   rotate: false
-  xy: 2, 24
+  xy: 392, 24
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

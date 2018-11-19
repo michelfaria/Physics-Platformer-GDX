@@ -27,7 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.github.michelfaria.breadprototype.actor.Player;
+import io.github.michelfaria.breadprototype.actor.*;
+import io.github.michelfaria.breadprototype.actor.DirtBlock.DirtBlockFactory;
+import io.github.michelfaria.breadprototype.actor.TntBlock.TntBlockFactory;
 import io.github.michelfaria.breadprototype.fud.WorldSolidUD;
 import io.github.michelfaria.breadprototype.logic.Positionable;
 import io.github.michelfaria.breadprototype.strategy.*;
@@ -67,6 +69,9 @@ public class Game extends ApplicationAdapter {
     private RayHandler rayHandler;
     private InputProcessor inputProcessor;
 
+    private ExplosionEmitter.ExplosionEmitterFactory explosionEmitterFactory;
+    private BlockFactory<DirtBlock> dirtBlockBlockFactory;
+    private BlockFactory<TntBlock> tntBlockBlockFactory;
     private BlockSpawner blockSpawner;
     private WandProjectileSpawner wandProjectileSpawner;
     private Unprojector unprojector;
@@ -80,69 +85,68 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         super.create();
-        initAssets();
-        initGraphics();
-        initParticlePools();
-        initScene2D();
-        unprojector = new Unprojector(camera);
-        todoListAppender = new TodoListAppender(todoList);
-        initTiled();
-        initBox2D();
-        explosionMaker = new ExplosionMaker();
-        initSpawners();
-        initBox2DLights();
-        initTiledBox2DIntegration();
-        initPlayer();
-        initInputProcessor();
-        initContactListener();
-    }
-
-    private void initAssets() {
+        // Assets
         assetManager = new AssetManager();
         assetManager.load(Assets.TEXTURE_ATLAS);
         assetManager.finishLoading();
-    }
 
-    private void initGraphics() {
+        // Graphics
         fpsLogger = new FPSLogger();
         spriteBatch = new SpriteBatch();
         textureAtlas = assetManager.get(Assets.TEXTURE_ATLAS);
         shapeRenderer = new ShapeRenderer();
-    }
+        particlePools = new ParticlePools(textureAtlas);
 
-    private void initScene2D() {
+        // Scene2d
         camera = new OrthographicCamera();
         viewport = new FitViewport(VRESX, VRESY, camera);
         stage = new Stage(viewport);
-    }
 
-    private void initParticlePools() {
-        particlePools = new ParticlePools(textureAtlas);
-    }
-
-    private void initTiled() {
+        // Tiled
         tmxMapLoader = new TmxMapLoader();
         tiledMap = tmxMapLoader.load(Assets.TEST_MAP);
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, ptm(1f), spriteBatch);
-    }
 
-    private void initBox2D() {
+        // Box2d
         box2DDebugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0, GRAVITY), true);
-    }
 
-    private void initSpawners() {
-        blockSpawner = new BlockSpawner(stage, world, textureAtlas, particlePools.blockCreationEffectPool, explosionMaker);
-        wandProjectileSpawner = new WandProjectileSpawner(stage, world, blockSpawner , particlePools.wandProjectileEffectPool);
-    }
-
-    private void initBox2DLights() {
+        // Lights
         rayHandler = new RayHandler(world);
         rayHandler.setBlur(true);
         rayHandler.setBlurNum(BLUR_NUM);
         rayHandler.setAmbientLight(08888f);
         new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 10, 15);
-        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1,  1), 20, 41, 24);
+        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 41, 24);
+
+        // Logic
+        unprojector = new Unprojector(camera);
+        todoListAppender = new TodoListAppender(todoList);
+
+        // Spawners
+        explosionEmitterFactory = new ExplosionEmitter.ExplosionEmitterFactory(particlePools.explosionSmokeParticlePool);
+        explosionMaker = new ExplosionMaker();
+        dirtBlockBlockFactory = new DirtBlockFactory(world, particlePools.blockCreationEffectPool, textureAtlas);
+        tntBlockBlockFactory = new TntBlockFactory(world, particlePools.blockCreationEffectPool, textureAtlas, explosionMaker, explosionEmitterFactory);
+        blockSpawner = new BlockSpawner(stage, dirtBlockBlockFactory, tntBlockBlockFactory);
+        wandProjectileSpawner = new WandProjectileSpawner(stage, world, blockSpawner, particlePools.wandProjectileEffectPool);
+
+        // Box2d collision handling
+        world.setContactListener(new MyContactListener(blockSpawner, todoListAppender));
+
+        initTiledBox2DIntegration();
+
+        // Player
+        final Player p = new Player(world, textureAtlas);
+        p.init();
+        p.setTransform(2f, 5f, 0f);
+        stage.addActor(p);
+        cameraTarget = p;
+        player = p;
+
+        // Input
+        inputProcessor = new MyInputProcessor(blockSpawner, wandProjectileSpawner, unprojector, player);
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 
     private void initTiledBox2DIntegration() {
@@ -170,26 +174,8 @@ public class Game extends ApplicationAdapter {
         }
     }
 
-    private void initInputProcessor() {
-        inputProcessor = new MyInputProcessor(blockSpawner, wandProjectileSpawner, unprojector, player);
-        Gdx.input.setInputProcessor(inputProcessor);
-    }
-
-    private void initContactListener() {
-        world.setContactListener(new MyContactListener(blockSpawner, todoListAppender));
-    }
-
     private boolean isPhysicsLayer(MapLayer layer) {
         return layer.getName().contains("[phys]");
-    }
-
-    private void initPlayer() {
-        final Player p = new Player(world, textureAtlas);
-        p.init();
-        p.setTransform(2f, 5f, 0f);
-        stage.addActor(p);
-        cameraTarget = p;
-        player = p;
     }
 
     @Override
