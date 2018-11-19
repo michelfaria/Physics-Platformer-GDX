@@ -96,9 +96,9 @@ public class Game extends ApplicationAdapter {
         textureAtlas = assetManager.get(Assets.TEXTURE_ATLAS);
         shapeRenderer = new ShapeRenderer();
         particlePools = new ParticlePools(textureAtlas);
+        camera = new OrthographicCamera();
 
         // Scene2d
-        camera = new OrthographicCamera();
         viewport = new FitViewport(VRESX, VRESY, camera);
         stage = new Stage(viewport);
 
