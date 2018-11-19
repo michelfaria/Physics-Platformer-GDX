@@ -1,103 +1,110 @@
 
 default.png
-size: 2048,256
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 dirt
   rotate: false
-  xy: 1692, 136
+  xy: 262, 266
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 effect-flame-1
   rotate: false
-  xy: 262, 24
+  xy: 2, 154
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-2
   rotate: false
-  xy: 2, 24
+  xy: 2, 284
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-3
   rotate: false
-  xy: 132, 24
+  xy: 516, 798
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-4
   rotate: false
-  xy: 1562, 24
+  xy: 132, 24
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-light
   rotate: false
-  xy: 912, 24
+  xy: 132, 154
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+effect-nova-1
+  rotate: false
+  xy: 2, 414
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
 effect-smoke-1
   rotate: false
-  xy: 652, 24
+  xy: 646, 798
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-2
   rotate: false
-  xy: 782, 24
+  xy: 2, 24
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-4
   rotate: false
-  xy: 522, 24
+  xy: 516, 668
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-5
   rotate: false
-  xy: 1042, 24
+  xy: 262, 284
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-6
   rotate: false
-  xy: 1172, 24
+  xy: 516, 538
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-7
   rotate: false
-  xy: 1302, 24
+  xy: 646, 668
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-8
   rotate: false
-  xy: 1432, 24
+  xy: 776, 798
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-star
   rotate: false
-  xy: 392, 24
+  xy: 132, 284
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -111,7 +118,7 @@ player-idle
   index: -1
 tnt
   rotate: false
-  xy: 19, 6
+  xy: 392, 396
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

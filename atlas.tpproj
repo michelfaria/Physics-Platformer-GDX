@@ -31,7 +31,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:resources/player-idle.png,type:Input,regionName:null},{path:resources/dirt.png,type:Input,regionName:null},{path:resources/effects/effect-star.png,type:Input,regionName:null},{path:resources/tnt.png,type:Input,regionName:null},{path:resources/effects/effect-light.png,type:Input,regionName:null}]
+inputFiles=[{path:resources/player-idle.png,type:Input,regionName:null},{path:resources/dirt.png,type:Input,regionName:null},{path:resources/effects/effect-star.png,type:Input,regionName:null},{path:resources/tnt.png,type:Input,regionName:null},{path:resources/effects/effect-light.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-1.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-8.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-2.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-4.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-5.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-6.png,type:Input,regionName:null},{path:resources/effects/effect-smoke-7.png,type:Input,regionName:null},{path:resources/effects/effect-flame-1.png,type:Input,regionName:null},{path:resources/effects/effect-flame-4.png,type:Input,regionName:null},{path:resources/effects/effect-flame-2.png,type:Input,regionName:null},{path:resources/effects/effect-flame-3.png,type:Input,regionName:null},{path:resources/effects/effect-nova-1.png,type:Input,regionName:null}]
 
 
 -PROJ-

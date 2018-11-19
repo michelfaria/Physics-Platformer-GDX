@@ -9,18 +9,28 @@ import io.github.michelfaria.breadprototype.strategy.EffectDrawer;
 public class ExplosionEmitter extends Actor implements Disposable {
 
     private final EffectDrawer effectDrawer = new EffectDrawer();
-    private ParticleEffectPool explosionSmokePEP;
+    private final ParticleEffectPool explosionSmokePEP;
+    private final ParticleEffectPool novaPEP;
 
-    public ExplosionEmitter(ParticleEffectPool explosionSmokePEP) {
+    public ExplosionEmitter(ParticleEffectPool explosionSmokePEP, ParticleEffectPool novaPEP) {
         this.explosionSmokePEP = explosionSmokePEP;
+        this.novaPEP = novaPEP;
     }
 
     public void init() {
         addSmokeEffect();
+        addNovaEffect();
     }
 
     protected void addSmokeEffect() {
         final ParticleEffectPool.PooledEffect e = explosionSmokePEP.obtain();
+        e.setPosition(getX(), getY());
+        effectDrawer.add(e);
+        e.start();
+    }
+
+    protected void addNovaEffect() {
+        final ParticleEffectPool.PooledEffect e = novaPEP.obtain();
         e.setPosition(getX(), getY());
         effectDrawer.add(e);
         e.start();
@@ -48,13 +58,15 @@ public class ExplosionEmitter extends Actor implements Disposable {
 
     public static class ExplosionEmitterFactory {
         private final ParticleEffectPool explosionSmokePEP;
+        private final ParticleEffectPool novaPEP;
 
-        public ExplosionEmitterFactory(ParticleEffectPool explosionSmokePEP) {
+        public ExplosionEmitterFactory(ParticleEffectPool explosionSmokePEP, ParticleEffectPool novaPEP) {
             this.explosionSmokePEP = explosionSmokePEP;
+            this.novaPEP = novaPEP;
         }
 
         public ExplosionEmitter make() {
-            return new ExplosionEmitter(explosionSmokePEP);
+            return new ExplosionEmitter(explosionSmokePEP, novaPEP);
         }
     }
 }

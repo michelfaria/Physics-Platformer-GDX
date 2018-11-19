@@ -124,12 +124,12 @@ public class Game extends ApplicationAdapter {
         todoListAppender = new TodoListAppender(todoList);
 
         // Spawners
-        explosionEmitterFactory = new ExplosionEmitter.ExplosionEmitterFactory(particlePools.explosionSmokeParticlePool);
+        explosionEmitterFactory = new ExplosionEmitter.ExplosionEmitterFactory(particlePools.explosionSmokePEP, particlePools.novaPEP);
         explosionMaker = new ExplosionMaker();
-        dirtBlockBlockFactory = new DirtBlockFactory(world, particlePools.blockCreationEffectPool, textureAtlas);
-        tntBlockBlockFactory = new TntBlockFactory(world, particlePools.blockCreationEffectPool, textureAtlas, explosionMaker, explosionEmitterFactory);
+        dirtBlockBlockFactory = new DirtBlockFactory(world, particlePools.blockCreationPEP, textureAtlas);
+        tntBlockBlockFactory = new TntBlockFactory(world, particlePools.blockCreationPEP, textureAtlas, explosionMaker, explosionEmitterFactory);
         blockSpawner = new BlockSpawner(stage, dirtBlockBlockFactory, tntBlockBlockFactory);
-        wandProjectileSpawner = new WandProjectileSpawner(stage, world, blockSpawner, particlePools.wandProjectileEffectPool);
+        wandProjectileSpawner = new WandProjectileSpawner(stage, world, blockSpawner, particlePools.wandProjectilePEP);
 
         // Box2d collision handling
         world.setContactListener(new MyContactListener(blockSpawner, todoListAppender));

@@ -16,7 +16,8 @@ public class Assets {
     public static final FileHandle
             EFFECT_BLOCK_CREATE = _n(Gdx.files.internal("effects/block-create.p")),
             EFFECT_WAND_PARTICLE = _n(Gdx.files.internal("effects/wand-projectile.p")),
-            EFFECT_EXPLOSION_SMOKE_EFFECT = _n(Gdx.files.internal("effects/explosion-smoke.p"));
+            EFFECT_EXPLOSION_SMOKE = _n(Gdx.files.internal("effects/explosion-smoke.p")),
+            EFFECT_NOVA = _n(Gdx.files.internal("effects/force-nova.p"));
 
     public static final String
             TEST_MAP = "maps/test.tmx";
