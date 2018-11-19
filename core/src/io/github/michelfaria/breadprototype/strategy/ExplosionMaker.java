@@ -34,7 +34,6 @@ public class ExplosionMaker {
                             fud.trigger();
                         }
                     }, 1);
-                    return 0;
                 }
                 applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) NUM_RAYS);
                 return 0;
