@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Timer;
+import io.github.michelfaria.breadprototype.fud.TNTBlockUD;
 import io.github.michelfaria.breadprototype.logic.IgnoreExplosions;
 
 public class ExplosionMaker {
@@ -22,6 +24,16 @@ public class ExplosionMaker {
 
             RayCastCallback cb = (fixture, point, normal, fraction) -> {
                 if (fixture.getUserData() instanceof IgnoreExplosions) {
+                    return 0;
+                }
+                if (fixture.getUserData() instanceof TNTBlockUD) {
+                    TNTBlockUD fud = (TNTBlockUD) fixture.getUserData();
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            fud.trigger();
+                        }
+                    }, 1);
                     return 0;
                 }
                 applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) NUM_RAYS);

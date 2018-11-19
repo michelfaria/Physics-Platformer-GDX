@@ -94,7 +94,6 @@ public class Player extends PhysicsActor {
         super.act(delta);
         assert facing != 0;
         handleInput();
-        System.out.println("isGrounded() = " + isGrounded());
     }
 
     private void handleInput() {

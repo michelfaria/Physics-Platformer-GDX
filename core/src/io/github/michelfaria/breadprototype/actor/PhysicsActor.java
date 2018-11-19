@@ -76,6 +76,4 @@ public class PhysicsActor extends Actor implements Positionable, Disposable {
     public boolean isDisposed() {
         return isDisposed;
     }
-
-
 }
