@@ -62,8 +62,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-        compile "org.jetbrains:annotations:16.0.3"
-        compileOnly 'org.projectlombok:lombok:1.18.4'
     }
 }
 
