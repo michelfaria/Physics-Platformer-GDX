@@ -97,9 +97,9 @@ public class Game extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         particlePools = new ParticlePools(textureAtlas);
         camera = new OrthographicCamera();
+        viewport = new FitViewport(VRESX, VRESY, camera);
 
         // Scene2d
-        viewport = new FitViewport(VRESX, VRESY, camera);
         stage = new Stage(viewport);
 
         // Tiled
