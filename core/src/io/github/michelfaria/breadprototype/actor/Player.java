@@ -17,10 +17,10 @@ import io.github.michelfaria.breadprototype.util.Pair;
 public class Player extends PhysicsActor {
 
     public static final float
-            MOVE_FORCE_X = 200,
-            SPEED_LIMIT_X = 5f,
-            JUMP_FORCE = 980,
-            KICK_FORCE = 40_000f;
+            MOVE_FORCE_X = 400,
+            SPEED_LIMIT_X = 5,
+            JUMP_FORCE = 2_000,
+            KICK_FORCE = 40_000;
 
     private TextureRegion idleTexture;
 
@@ -31,15 +31,15 @@ public class Player extends PhysicsActor {
     public Player(World world, TextureAtlas atlas) {
         super(world);
         idleTexture = atlas.findRegion(TextureRegionNames.PLAYER_IDLE);
-        setWidth(1f);
-        setHeight(1f);
+        setWidth(2);
+        setHeight(2);
     }
 
     @Override
     public void init() {
         super.init();
         initBody();
-        initBodyFixture();
+        initBodyFixtures();
         initGroundedSensorFixture();
     }
 
@@ -50,22 +50,38 @@ public class Player extends PhysicsActor {
         this.body.setFixedRotation(true);
     }
 
-    protected void initBodyFixture() {
+    protected void initBodyFixtures() {
+        final PlayerBodyUD userData = new PlayerBodyUD();
         final PolygonShape s = new PolygonShape();
-        s.setAsBox(getWidth() / 2, getHeight() / 2);
+        s.setAsBox(bodyFixtureWidth(), bodyFixtureHeight());
+
         final FixtureDef f = new FixtureDef();
+        // main fixture
         f.shape = s;
-        f.friction = 0.9f;
+        f.friction = 5;
         f.density = 7;
         f.filter.categoryBits = Bits.BIT_ENTITY;
-        this.body.createFixture(f).setUserData(new PlayerBodyUD());
+        this.body.createFixture(f).setUserData(userData);
+
+        // 0-friction left side to prevent sticking to walls
+        s.setAsBox(0.05f, bodyFixtureHeight() - 0.01f, new Vector2(getX() - bodyFixtureWidth(), getY()), 0);
+        f.friction = 0;
+        f.density = 0;
+        this.body.createFixture(f).setUserData(userData);
+
+        // 0-friction right side to prevent sticking to walls
+        s.setAsBox(0.05f, bodyFixtureHeight() - 0.01f, new Vector2(getX() + bodyFixtureWidth(), getY()), 0);
+        f.friction = 0;
+        f.density = 0;
+        this.body.createFixture(f).setUserData(userData);
+
         s.dispose();
     }
 
     protected void initGroundedSensorFixture() {
-        final float left = getX() - getWidth() / 2 + 0.05f;
-        final float bottom = getY() - getHeight() / 2 - 0.05f;
-        final float right = getX() + getWidth() / 2 - 0.05f;
+        final float left = getX() - bodyFixtureWidth() + 0.05f;
+        final float bottom = getY() - bodyFixtureHeight() - 0.05f;
+        final float right = getX() + bodyFixtureWidth() - 0.05f;
 
         final EdgeShape s = new EdgeShape();
         s.set(left, bottom, right, bottom);
@@ -78,6 +94,14 @@ public class Player extends PhysicsActor {
 
         this.body.createFixture(f).setUserData(new PlayerFeetUD(this));
         s.dispose();
+    }
+
+    private float bodyFixtureWidth() {
+        return getWidth() / 4;
+    }
+
+    private float bodyFixtureHeight() {
+        return getHeight() / 2;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class Game extends ApplicationAdapter {
     public static final float
             VRESX = 25,
             VRESY = 15,
-            GRAVITY = -9.18f * 2,
+            GRAVITY = -9.18f,
             CAMERA_LERP = 0.1f;
     public static final int
             RAYS_NUM = 1000,
@@ -149,12 +149,12 @@ public class Game extends ApplicationAdapter {
         Gdx.input.setInputProcessor(inputProcessor);
 
         // Make moving platform
-        final MovingPlatform m = new MovingPlatform(world);
-        stage.addActor(m);
-        m.init();
-        m.setTransform(23, 6, 0);
-        m.destinations.add(new Vector2(m.getX() + 10, m.getY()));
-        m.destinations.add(new Vector2(m.getX(), m.getY()));
+//        final MovingPlatform m = new MovingPlatform(world);
+//        stage.addActor(m);
+//        m.init();
+//        m.setTransform(23, 6, 0);
+//        m.destinations.add(new Vector2(m.getX() + 10, m.getY()));
+//        m.destinations.add(new Vector2(m.getX(), m.getY()));
     }
 
     private void initTiledBox2DIntegration() {
@@ -206,13 +206,13 @@ public class Game extends ApplicationAdapter {
         }
         spriteBatch.end();
         renderLighting();
-        renderDebugThings();
-        renderBox2DDebug();
+        // renderDebugThings();
+        // renderBox2DDebug();
     }
 
     private void update() {
         runTodos();
-        world.step(1 / 60f, 6, 2);
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
         stage.act();
         updateCamera();
     }
