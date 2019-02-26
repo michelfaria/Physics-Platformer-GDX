@@ -7,111 +7,111 @@ repeat: none
 dirt
   rotate: false
   xy: 2, 2
-  size: 16, 16
-  orig: 16, 16
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 effect-flame-1
   rotate: false
-  xy: 132, 280
+  xy: 2, 328
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-2
   rotate: false
-  xy: 516, 794
+  xy: 516, 842
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-3
   rotate: false
-  xy: 2, 150
+  xy: 2, 198
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-flame-4
   rotate: false
-  xy: 262, 150
+  xy: 132, 328
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-light
   rotate: false
-  xy: 262, 280
+  xy: 516, 712
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-nova-1
   rotate: false
-  xy: 2, 410
+  xy: 2, 458
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 effect-smoke-1
   rotate: false
-  xy: 2, 20
+  xy: 646, 842
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-2
   rotate: false
-  xy: 132, 150
+  xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-4
   rotate: false
-  xy: 646, 794
+  xy: 132, 198
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-5
   rotate: false
-  xy: 516, 534
+  xy: 262, 328
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-6
   rotate: false
-  xy: 646, 664
+  xy: 516, 582
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-7
   rotate: false
-  xy: 776, 794
+  xy: 646, 712
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-smoke-8
   rotate: false
-  xy: 132, 20
+  xy: 776, 842
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 effect-star
   rotate: false
-  xy: 516, 664
+  xy: 132, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 player-idle
   rotate: false
-  xy: 2, 280
+  xy: 262, 198
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -119,7 +119,7 @@ player-idle
 tnt
   rotate: false
   xy: 392, 392
-  size: 16, 16
-  orig: 16, 16
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1

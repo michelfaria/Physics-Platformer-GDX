@@ -115,9 +115,10 @@ public class Game extends ApplicationAdapter {
         rayHandler = new RayHandler(world);
         rayHandler.setBlur(true);
         rayHandler.setBlurNum(BLUR_NUM);
-        rayHandler.setAmbientLight(08888f);
-        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 10, 15);
-        new PointLight(rayHandler, RAYS_NUM, new Color(1, 1, 1, 1), 20, 41, 24);
+        rayHandler.setAmbientLight(0, 0, 0, 0);
+        rayHandler.setShadows(true);
+        new PointLight(rayHandler, RAYS_NUM, new Color(0, 1, 0, 1), 20, 10, 10);
+        new PointLight(rayHandler, RAYS_NUM, new Color(0, 1, 0, 1), 20, 41, 24);
 
         // Logic
         unprojector = new Unprojector(camera);

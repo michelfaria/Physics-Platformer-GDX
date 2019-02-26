@@ -9,9 +9,20 @@ buildscript {
         jcenter()
         google()
     }
+    ext {
+        gdxVersion = '1.9.8'
+    }
     dependencies {
-        
+        classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
 
+project.ext.texturePacker = [ "resources/", "core/assets/", "default" ]
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+task texturePacker << {
+    if (project.ext.has('texturePacker')) {
+        logger.info "Calling TexturePacker: "+texturePacker
+        TexturePacker.process(texturePacker[0], texturePacker[1], texturePacker[2])
     }
 }
 
@@ -22,7 +33,6 @@ allprojects {
     version = '1.0'
     ext {
         appName = "BreadPrototype"
-        gdxVersion = '1.9.8'
         roboVMVersion = '2.3.5'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
